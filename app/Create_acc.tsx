@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     textAlign: "center",
     fontSize: 18,
+    backgroundColor: "blue",
   },
   welcome_text_container: {
     height: 150,

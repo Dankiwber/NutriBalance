@@ -49,13 +49,22 @@ const AuthScreen = () => {
         </Text>
       </View>
       <View style={styles.login_container}>
-        <View style={styles.welcome_text_container}>
-          <Text style={styles.welcome_text1}>
-            {isLogin ? "Hello" : "Welcome"}
-          </Text>
-          <Text style={styles.welcome_text2}>
-            {isLogin ? "Sign into your account" : "Create your account"}
-          </Text>
+        <View
+          style={[
+            isLogin
+              ? styles.welcome_text_container_login
+              : styles.welcome_text_container_create,
+          ]}
+        >
+          {isLogin ? <Text style={styles.welcome_text1}>Hello</Text> : ""}
+
+          {isLogin ? (
+            <Text style={styles.welcome_text2_login}>
+              Sign into your account
+            </Text>
+          ) : (
+            <Text style={styles.welcome_text2_create}>Create your account</Text>
+          )}
         </View>
         <Formik
           initialValues={
@@ -147,7 +156,7 @@ const AuthScreen = () => {
                 )}
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.login_button}
+                style={[isLogin ? styles.login_button : styles.create_button]}
                 onPress={handleSubmit}
               >
                 <Text style={styles.login_button_text}>
@@ -207,16 +216,25 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 40,
   },
-  welcome_text2: {
+  welcome_text2_login: {
     color: "#BD5D7B",
     fontWeight: 500,
     textAlign: "center",
     fontSize: 18,
   },
-  welcome_text_container: {
+  welcome_text2_create: {
+    marginTop: 25,
+    color: "#BD5D7B",
+    fontWeight: 500,
+    textAlign: "center",
+    fontSize: 18,
+  },
+  welcome_text_container_login: {
     height: 150,
   },
-
+  welcome_text_container_create: {
+    height: 60,
+  },
   container: {
     alignItems: "center", // 水平居中
   },
@@ -254,6 +272,14 @@ const styles = StyleSheet.create({
   },
   login_button: {
     marginTop: 50,
+    width: 252,
+    height: 39,
+    backgroundColor: "#6387A9",
+    justifyContent: "center",
+    borderRadius: 15,
+  },
+  create_button: {
+    marginTop: 10,
     width: 252,
     height: 39,
     backgroundColor: "#6387A9",

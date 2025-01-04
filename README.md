@@ -1,50 +1,46 @@
-# Welcome to your Expo app 👋
+# **NutriBalance Web App**
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**NutriBalance** is a food tracking application designed to help users log their daily food intake, calculate nutritional information, and manage their health goals. This web app is built using **React Native for Web** to deliver a seamless and responsive user experience across devices.
 
-## Get started
+---
 
-1. Install dependencies
+## **Features**
 
-   ```bash
-   npm install
-   ```
+- **Food Logging** : Add food items along with their quantity and meal type (e.g., breakfast, lunch, dinner).
+- **Nutritional Analysis** : Automatically calculate calories, protein, carbs, and fat using an integrated nutrition API.
+- **Meal History** : View and manage your logged meals for each day.
+- **Personalized Recommendations** : Receive tips for balancing your nutrition based on daily intake.
+- **Responsive Design** : Optimized for both desktop and mobile browsers.
 
-2. Start the app
+---
 
-   ```bash
-    npx expo start
-   ```
+## **Tech Stack**
 
-In the output, you'll find options to open the app in a
+- **Frontend** : React Native for Web, TypeScript (or JavaScript)
+- **State Management** : React Context API (or alternative state management tool like Zustand/Redux)
+- **Styling** : Styled Components/Material-UI for consistent and modern UI
+- **Backend** : Django REST Framework (for API support)
+- **Database** : PostgreSQL (for user and food log data)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## **Key Components**
 
-## Get a fresh project
+### **1. Food Logging**
 
-When you're ready, run:
+- Input food name and quantity.
+- Select meal type (Breakfast, Lunch, Dinner).
 
-```bash
-npm run reset-project
-```
+### **2. Nutritional Analysis**
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- Uses **USDA FoodData Central API** for accurate nutritional data.
+- Displays the breakdown of calories, protein, carbs, and fats.
 
-## Learn more
+### **3. Meal History**
 
-To learn more about developing your project with Expo, look at the following resources:
+- View previously logged meals with timestamps.
+- Edit or delete food entries as needed.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### **4. Recommendations**
 
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- Provides actionable suggestions for improving daily nutritional balance.
