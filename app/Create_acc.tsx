@@ -1,3 +1,4 @@
+import { Link } from "expo-router";
 import React from "react";
 import {
   Image,
@@ -34,7 +35,7 @@ const LoginScreen = () => {
       <View style={styles.login_container}>
         <View style={styles.welcome_text_container}>
           <Text style={styles.welcome_text1}>Hello</Text>
-          <Text style={styles.welcome_text2}>Sign into your account</Text>
+          <Text style={styles.welcome_text2}>Create your account Today!</Text>
         </View>
         <Formik
           initialValues={{ email: "", password: "" }}
@@ -96,7 +97,9 @@ const LoginScreen = () => {
       <View style={styles.creat_acc_container}>
         <Text style={styles.creat_acc_base}>
           Don't have an acoount?{" "}
-          <Text style={styles.creat_acc_sp}>Create here</Text>
+          <Link href="/Create_acc" style={styles.creat_acc_sp}>
+            Create here
+          </Link>
         </Text>
       </View>
     </>
