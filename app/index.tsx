@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   Image,
   View,
@@ -11,7 +11,8 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 
 const AuthScreen = () => {
-  const [isLogin, setIsLogin] = useState(true); // 控制登录和注册的切换
+  const [isLogin, setIsLogin] = useState(true);
+  const formikRef = useRef(); // 引用 Formik 实例
 
   const loginValidationSchema = Yup.object().shape({
     email: Yup.string()
@@ -67,6 +68,7 @@ const AuthScreen = () => {
           )}
         </View>
         <Formik
+          innerRef={formikRef}
           initialValues={
             isLogin
               ? { email: "", password: "" }
@@ -168,7 +170,12 @@ const AuthScreen = () => {
         </Formik>
       </View>
       <View style={styles.creat_acc_container}>
-        <TouchableOpacity onPress={() => setIsLogin(!isLogin)}>
+        <TouchableOpacity
+          onPress={() => {
+            setIsLogin(!isLogin); // 切换登录/创建账号状态
+            formikRef.current?.resetForm(); // 重置表单内容
+          }}
+        >
           <Text style={styles.creat_acc_base}>
             {isLogin ? "Don't have an account? " : "Already have an account? "}
             <Text style={styles.creat_acc_sp}>
@@ -200,7 +207,7 @@ const styles = StyleSheet.create({
     height: 92,
   },
   login_container: {
-    width: 360,
+    width: 380,
     height: 460,
     marginHorizontal: "auto",
     backgroundColor: "#A7BFD6",
@@ -251,7 +258,6 @@ const styles = StyleSheet.create({
   input_text: {
     fontSize: 14,
     marginLeft: 5,
-    color: "rgba(0, 0, 0, 0.6)",
   },
   input_container: {
     height: 80,
