@@ -2,7 +2,7 @@
 
 **NutriBalance** is a food tracking application designed to help users log their daily food intake, calculate nutritional information, and manage their health goals. This web app is built using **React Native for Web** to deliver a seamless and responsive user experience across devices.
 
-## \***\*How to Run the App on Your Phone\*\***
+## \***\*How to run app on your phone\*\***
 
 Follow these steps to run the app on your phone:
 
