@@ -2,7 +2,7 @@
 
 **NutriBalance** is a food tracking application designed to help users log their daily food intake, calculate nutritional information, and manage their health goals. This web app is built using **React Native for Web** to deliver a seamless and responsive user experience across devices.
 
-## \***\*How to run app on your phone\*\***
+## **How to run app on your phone**
 
 Follow these steps to run the app on your phone:
 
@@ -44,7 +44,7 @@ npx expo start
 
 ### 4. Install Expo Go on Your Phone
 
-- Download the **Expo Go** app from the [App Store](https://apps.apple.com/) (iOS) or [Google Play Store](https://play.google.com/) (Android).
+- Download the **Expo Go** app from the [App Store](https://apps.apple.com/) (iOS).
 - Open the Expo Go app on your phone.
 
 ### 5. Connect to the Project
