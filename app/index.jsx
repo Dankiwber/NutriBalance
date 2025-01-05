@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+
 import {
   Image,
   View,
@@ -9,10 +10,12 @@ import {
 } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { Link, useRouter } from "expo-router";
 
 const AuthScreen = () => {
   const [isLogin, setIsLogin] = useState(true);
   const formikRef = useRef(); // 引用 Formik 实例
+  const router = useRouter(); // 使用 useRouter 进行导航
 
   const loginValidationSchema = Yup.object().shape({
     email: Yup.string()
@@ -24,6 +27,11 @@ const AuthScreen = () => {
   });
   const handleLoginSubmit = (values) => {
     console.log("Logging in with values:", values);
+    if (values.email === "88888888@qq.com" && values.password === "88888888") {
+      router.push("/main_app"); // 导航到主页面
+    } else {
+      alert("Invalid email or password"); // 显示错误提示
+    }
   };
   const handleRegisterSubmit = (values) => {
     console.log("Registering with values:", values);
@@ -170,9 +178,11 @@ const AuthScreen = () => {
                 style={[isLogin ? styles.login_button : styles.create_button]}
                 onPress={handleSubmit}
               >
-                <Text style={styles.login_button_text}>
-                  {isLogin ? "Login" : "Create Account"}
-                </Text>
+                {isLogin ? (
+                  <Text style={styles.login_button_text}>Login</Text>
+                ) : (
+                  <Text style={styles.login_button_text}>Create Account</Text>
+                )}
               </TouchableOpacity>
             </View>
           )}
