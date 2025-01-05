@@ -22,7 +22,12 @@ const AuthScreen = () => {
       .min(8, "Password must be at least 8 characters")
       .required("Password is required"),
   });
-
+  const handleLoginSubmit = (values) => {
+    console.log("Logging in with values:", values);
+  };
+  const handleRegisterSubmit = (values) => {
+    console.log("Registering with values:", values);
+  };
   const registerValidationSchema = Yup.object().shape({
     username: Yup.string()
       .min(3, "Username must be at least 3 characters")
@@ -78,7 +83,11 @@ const AuthScreen = () => {
             isLogin ? loginValidationSchema : registerValidationSchema
           }
           onSubmit={(values) => {
-            console.log("Form Values:", values);
+            if (isLogin) {
+              handleLoginSubmit(values);
+            } else {
+              handleRegisterSubmit(values);
+            }
           }}
         >
           {({
