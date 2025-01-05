@@ -56,7 +56,7 @@ const AuthScreen = () => {
       <View style={styles.header_container}>
         <Image
           style={styles.logo_container}
-          source={require("@/assets/images/Logo.png")}
+          source={require("@/assets/images/MainLogo.png")}
         />
         <Text style={styles.logo_text_base}>
           <Text style={styles.logo_text_sp}>Nutri</Text>Balance
