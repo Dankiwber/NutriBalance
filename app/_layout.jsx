@@ -1,11 +1,17 @@
-import { StatusBar, StyleSheet, Text, View } from "react-native";
-import { Slot, Stack } from "expo-router";
+import { StyleSheet } from "react-native";
+import { Slot } from "expo-router";
 import React from "react";
-const index = () => {
-  return <Slot />;
+
+const Layout = () => {
+  return (
+    <>
+      {/* 可以添加全局组件，例如 Header 或 Footer */}
+      <Slot />
+    </>
+  );
 };
 
-export default index;
+export default Layout;
 
 const styles = StyleSheet.create({
   footer: {

@@ -54,10 +54,7 @@ const AuthScreen = () => {
   return (
     <>
       <View style={styles.header_container}>
-        <Image
-          style={styles.logo_container}
-          source={require("../assets/images/Logo.png")}
-        />
+        <Image style={styles.logo_container} source={require("./Logo.png")} />
         <Text style={styles.logo_text_base}>
           <Text style={styles.logo_text_sp}>Nutri</Text>Balance
         </Text>
@@ -179,7 +176,7 @@ const AuthScreen = () => {
                 onPress={handleSubmit}
               >
                 {isLogin ? (
-                  <Link href={"/home"} style={styles.login_button_text}>
+                  <Link href={"/main_app"} style={styles.login_button_text}>
                     Login
                   </Link>
                 ) : (
