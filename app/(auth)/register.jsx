@@ -11,25 +11,26 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { Link, useRouter } from "expo-router";
 
-const LoginScreen = () => {
+const RegisterScreen = () => {
   const router = useRouter();
 
-  const loginValidationSchema = Yup.object().shape({
+  const registerValidationSchema = Yup.object().shape({
+    username: Yup.string()
+      .min(3, "Username must be at least 3 characters")
+      .required("Username is required"),
     email: Yup.string()
       .email("Please enter a valid email address")
       .required("Email is required"),
     password: Yup.string()
       .min(8, "Password must be at least 8 characters")
       .required("Password is required"),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password"), null], "Passwords must match")
+      .required("Confirm Password is required"),
   });
 
-  const handleLoginSubmit = (values) => {
-    console.log("Logging in with values:", values);
-    if (values.email === "88888888@qq.com" && values.password === "88888888") {
-      router.push("/home"); // 导航到主页
-    } else {
-      alert("Invalid email or password");
-    }
+  const handleRegisterSubmit = (values) => {
+    console.log("Registering with values:", values);
   };
 
   return (
@@ -44,14 +45,18 @@ const LoginScreen = () => {
         </Text>
       </View>
       <View style={styles.login_container}>
-        <View style={styles.welcome_text_container_login}>
-          <Text style={styles.welcome_text1}>Hello</Text>
-          <Text style={styles.welcome_text2_login}>Sign into your account</Text>
+        <View style={styles.welcome_text_container_create}>
+          <Text style={styles.welcome_text2_create}>Create your account</Text>
         </View>
         <Formik
-          initialValues={{ email: "", password: "" }}
-          validationSchema={loginValidationSchema}
-          onSubmit={handleLoginSubmit}
+          initialValues={{
+            username: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+          }}
+          validationSchema={registerValidationSchema}
+          onSubmit={handleRegisterSubmit}
         >
           {({
             handleChange,
@@ -62,6 +67,19 @@ const LoginScreen = () => {
             touched,
           }) => (
             <View style={styles.container}>
+              <View style={styles.input_container}>
+                <Text style={styles.input_text}>Username</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Username"
+                  onChangeText={handleChange("username")}
+                  onBlur={handleBlur("username")}
+                  value={values.username}
+                />
+                {errors.username && touched.username && (
+                  <Text style={styles.errorText}>{errors.username}</Text>
+                )}
+              </View>
               <View style={styles.input_container}>
                 <Text style={styles.input_text}>Email address</Text>
                 <TextInput
@@ -89,28 +107,37 @@ const LoginScreen = () => {
                   <Text style={styles.errorText}>{errors.password}</Text>
                 )}
               </View>
-              <TouchableOpacity style={styles.forget_button}>
-                <Text style={styles.forget_button_text}>
-                  Forget your Password?
-                </Text>
-              </TouchableOpacity>
+              <View style={styles.input_container}>
+                <Text style={styles.input_text}>Confirm Password</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Confirm Password"
+                  secureTextEntry
+                  onChangeText={handleChange("confirmPassword")}
+                  onBlur={handleBlur("confirmPassword")}
+                  value={values.confirmPassword}
+                />
+                {errors.confirmPassword && touched.confirmPassword && (
+                  <Text style={styles.errorText}>{errors.confirmPassword}</Text>
+                )}
+              </View>
               <TouchableOpacity
-                style={styles.login_button}
+                style={styles.create_button}
                 onPress={handleSubmit}
               >
-                <Text style={styles.login_button_text}>Login</Text>
+                <Text style={styles.login_button_text}>Create Account</Text>
               </TouchableOpacity>
             </View>
           )}
         </Formik>
       </View>
       <View style={styles.creat_acc_container}>
-        <TouchableOpacity onPress={() => router.push("/auth/create")}>
+        <TouchableOpacity onPress={() => router.push("/auth/login")}>
           <Text style={styles.creat_acc_base}>
-            Don't have an account?{" "}
-            <Link href="/register" style={styles.creat_acc_sp}>
-              Create here
-            </Link>
+            Already have an account?{" "}
+            <Text onPress={() => router.back()}>
+              <Text style={styles.creat_acc_sp}>Login here</Text>
+            </Text>
           </Text>
         </TouchableOpacity>
       </View>
@@ -240,4 +267,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default RegisterScreen;
