@@ -1,12 +1,12 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const chatBot = () => {
+const profile = () => {
   return (
     <View>
-      <Text>chatBot</Text>
+      <Text>profile</Text>
     </View>
   );
 };
 
-export default chatBot;
+export default profile;
