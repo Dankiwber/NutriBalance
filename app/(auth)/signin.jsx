@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-
 import {
   Image,
   View,
@@ -28,7 +27,7 @@ const AuthScreen = () => {
   const handleLoginSubmit = (values) => {
     console.log("Logging in with values:", values);
     if (values.email === "88888888@qq.com" && values.password === "88888888") {
-      router.push("/main_app"); // 导航到主页面
+      router.push("/home"); // 导航到主页面
     } else {
       alert("Invalid email or password"); // 显示错误提示
     }
@@ -54,7 +53,10 @@ const AuthScreen = () => {
   return (
     <>
       <View style={styles.header_container}>
-        <Image style={styles.logo_container} source={require("./Logo.png")} />
+        <Image
+          style={styles.logo_container}
+          source={require("../../assets/icons/logo.png")}
+        />
         <Text style={styles.logo_text_base}>
           <Text style={styles.logo_text_sp}>Nutri</Text>Balance
         </Text>
