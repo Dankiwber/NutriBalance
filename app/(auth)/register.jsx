@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Image,
   View,
@@ -10,9 +10,13 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Link, useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import icons from "../../constants/icons";
 
 const RegisterScreen = () => {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const registerValidationSchema = Yup.object().shape({
     username: Yup.string()
@@ -34,12 +38,9 @@ const RegisterScreen = () => {
   };
 
   return (
-    <>
+    <SafeAreaView>
       <View style={styles.header_container}>
-        <Image
-          style={styles.logo_container}
-          source={require("../../assets/icons/logo.png")}
-        />
+        <Image style={styles.logo_container} source={icons.logo} alt="LOGO" />
         <Text style={styles.logo_text_base}>
           <Text style={styles.logo_text_sp}>Nutri</Text>Balance
         </Text>
@@ -72,6 +73,7 @@ const RegisterScreen = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="Username"
+                  placeholderTextColor="#6387A9"
                   onChangeText={handleChange("username")}
                   onBlur={handleBlur("username")}
                   value={values.username}
@@ -85,6 +87,7 @@ const RegisterScreen = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="Email"
+                  placeholderTextColor="#6387A9"
                   onChangeText={handleChange("email")}
                   onBlur={handleBlur("email")}
                   value={values.email}
@@ -95,28 +98,54 @@ const RegisterScreen = () => {
               </View>
               <View style={styles.input_container}>
                 <Text style={styles.input_text}>Password</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Password"
-                  secureTextEntry
-                  onChangeText={handleChange("password")}
-                  onBlur={handleBlur("password")}
-                  value={values.password}
-                />
+                <View style={styles.password_container}>
+                  <TextInput
+                    style={styles.password_input}
+                    placeholder="Password"
+                    placeholderTextColor="#6387A9"
+                    secureTextEntry={!showPassword}
+                    onChangeText={handleChange("password")}
+                    onBlur={handleBlur("password")}
+                    value={values.password}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setShowPassword(!showPassword)}
+                    style={styles.show_password_button}
+                  >
+                    <Image
+                      source={!showPassword ? icons.no_eye : icons.eye}
+                      style={styles.show_password_img}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
+                </View>
                 {errors.password && touched.password && (
                   <Text style={styles.errorText}>{errors.password}</Text>
                 )}
               </View>
               <View style={styles.input_container}>
                 <Text style={styles.input_text}>Confirm Password</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Confirm Password"
-                  secureTextEntry
-                  onChangeText={handleChange("confirmPassword")}
-                  onBlur={handleBlur("confirmPassword")}
-                  value={values.confirmPassword}
-                />
+                <View style={styles.password_container}>
+                  <TextInput
+                    style={styles.password_input}
+                    placeholder="Confirm Password"
+                    placeholderTextColor="#6387A9"
+                    secureTextEntry={!showConfirmPassword}
+                    onChangeText={handleChange("confirmPassword")}
+                    onBlur={handleBlur("confirmPassword")}
+                    value={values.confirmPassword}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                    style={styles.show_password_button}
+                  >
+                    <Image
+                      source={!showConfirmPassword ? icons.no_eye : icons.eye}
+                      style={styles.show_password_img}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
+                </View>
                 {errors.confirmPassword && touched.confirmPassword && (
                   <Text style={styles.errorText}>{errors.confirmPassword}</Text>
                 )}
@@ -141,7 +170,7 @@ const RegisterScreen = () => {
           </Text>
         </TouchableOpacity>
       </View>
-    </>
+    </SafeAreaView>
   );
 };
 
@@ -149,10 +178,10 @@ const styles = StyleSheet.create({
   header_container: {
     alignItems: "center",
     height: 160,
-    marginTop: 90,
+    marginTop: 20,
   },
   logo_text_base: {
-    fontWeight: 800,
+    fontWeight: "800",
     fontSize: 40,
     color: "#6387A9",
   },
@@ -164,7 +193,7 @@ const styles = StyleSheet.create({
     height: 92,
   },
   login_container: {
-    width: 380,
+    width: 360,
     height: 460,
     marginHorizontal: "auto",
     backgroundColor: "#A7BFD6",
@@ -172,48 +201,54 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 2, height: 4 },
     shadowOpacity: 0.2,
   },
-  welcome_text1: {
-    fontWeight: 700,
-    color: "#BD5D7B",
-    textAlign: "center",
-    marginBottom: 10,
-    marginTop: 20,
-    fontSize: 40,
-  },
-  welcome_text2_login: {
-    color: "#BD5D7B",
-    fontWeight: 500,
-    textAlign: "center",
-    fontSize: 18,
-  },
   welcome_text2_create: {
     marginTop: 25,
     color: "#BD5D7B",
-    fontWeight: 500,
+    fontWeight: "500",
     textAlign: "center",
     fontSize: 18,
-  },
-  welcome_text_container_login: {
-    height: 150,
   },
   welcome_text_container_create: {
     height: 60,
   },
   container: {
-    alignItems: "center", // 水平居中
+    alignItems: "center",
   },
   input: {
-    width: 346,
+    width: 336,
     borderWidth: 1,
     borderColor: "#ccc",
-
     padding: 10,
     marginVertical: 3,
     borderRadius: 5,
     backgroundColor: "rgba(222,219,219,0.5)",
   },
+  password_container: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    backgroundColor: "rgba(222,219,219,0.5)",
+    width: 336,
+    paddingHorizontal: 10,
+    marginTop: 3,
+  },
+  password_input: {
+    flex: 1,
+    paddingVertical: 8,
+    fontSize: 15,
+  },
+  show_password_button: {
+    marginLeft: 10,
+  },
+  show_password_img: {
+    width: 20,
+    height: 20,
+  },
   input_text: {
-    fontSize: 14,
+    fontWeight: 500,
+    fontSize: 15,
     marginLeft: 5,
   },
   input_container: {
@@ -222,24 +257,7 @@ const styles = StyleSheet.create({
   errorText: {
     color: "red",
     fontSize: 12,
-    textAlign: "left", // 确保文本靠左对齐
-    alignSelf: "flex-start", // 不受父容器的 alignItems: "center" 影响
-  },
-  forget_button: {
-    alignSelf: "flex-end",
-    marginEnd: 10,
-  },
-  forget_button_text: {
-    fontSize: 12,
-    color: "#BD5D7B",
-  },
-  login_button: {
-    marginTop: 50,
-    width: 252,
-    height: 39,
-    backgroundColor: "#6387A9",
-    justifyContent: "center",
-    borderRadius: 15,
+    alignSelf: "flex-start",
   },
   create_button: {
     marginTop: 10,
