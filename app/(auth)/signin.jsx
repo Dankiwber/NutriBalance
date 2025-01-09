@@ -12,21 +12,9 @@ import * as Yup from "yup";
 import { Link, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import icons from "../../constants/icons";
-import { signIn, account } from "../../lib/appwrite";
+import { signIn } from "../../lib/appwrite";
 
 const LoginScreen = () => {
-  useEffect(() => {
-    const clearSessionsOnLoad = async () => {
-      try {
-        await account.deleteSessions(); // 清理所有活动会话
-      } catch (error) {
-        console.log("No active session to clear.", error);
-      }
-    };
-
-    clearSessionsOnLoad();
-  }, []); // 只在组件挂载时执行
-
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 

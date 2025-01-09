@@ -1,14 +1,18 @@
 import { StyleSheet } from "react-native";
-import { Slot } from "expo-router";
+import { Slot, Stack } from "expo-router";
+import GlobalProvider from "../context/GlobalProvider";
 import React from "react";
 import "../global.css";
 
 const Layout = () => {
   return (
-    <>
-      {/* 可以添加全局组件，例如 Header 或 Footer */}
-      <Slot />
-    </>
+    <GlobalProvider>
+      <Stack>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
+    </GlobalProvider>
   );
 };
 
