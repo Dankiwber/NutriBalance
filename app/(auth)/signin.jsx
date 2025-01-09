@@ -12,6 +12,7 @@ import * as Yup from "yup";
 import { Link, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import icons from "../../constants/icons";
+import { singIn } from "../../lib/appwrite";
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -26,10 +27,11 @@ const LoginScreen = () => {
       .required("Password is required"),
   });
 
-  const handleLoginSubmit = (values) => {
-    if (values.email === "88888888@qq.com" && values.password === "88888888") {
-      router.push("/home"); // 导航到主页
-    } else {
+  const handleLoginSubmit = async (values) => {
+    try {
+      await singIn(values.email, values.password);
+      router.replace("/home");
+    } catch (error) {
       alert("Invalid email or password");
     }
   };

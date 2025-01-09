@@ -6,12 +6,14 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
+  Alert,
 } from "react-native";
-import { Formik } from "formik";
+import { ErrorMessage, Formik } from "formik";
 import * as Yup from "yup";
 import { Link, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import icons from "../../constants/icons";
+import { createUser } from "../../lib/appwrite";
 
 const RegisterScreen = () => {
   const router = useRouter();
@@ -33,8 +35,18 @@ const RegisterScreen = () => {
       .required("Confirm Password is required"),
   });
 
-  const handleRegisterSubmit = (values) => {
+  const handleRegisterSubmit = async (values) => {
     console.log("Registering with values:", values);
+    try {
+      const result = await createUser(
+        values.email,
+        values.password,
+        values.username
+      );
+      alert("The account is successfully registered");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    }
   };
 
   return (
