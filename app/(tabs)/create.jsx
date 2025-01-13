@@ -26,7 +26,7 @@ const create = () => {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={styles.topText}>
         <Text style={styles.headerText}>Chat Add</Text>
       </View>
 
@@ -69,7 +69,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#EAEFF5",
   },
-  header: {
+  topText: {
+    paddingTop: 60,
     backgroundColor: "#F6F8FC",
     padding: 15,
     borderBottomWidth: 1,
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
   },
   chatArea: {
     flex: 1,
-    backgroundColor: "#F6F8FC",
+    backgroundColor: "#f3f3f4",
   },
   messageContainer: {
     marginBottom: 10,
