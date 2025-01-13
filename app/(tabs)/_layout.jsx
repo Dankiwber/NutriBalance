@@ -62,7 +62,7 @@ const TabLayout = () => {
           name="create"
           options={{
             title: "Create",
-            headerShown: true,
+            headerShown: false,
             tabBarIcon: ({ focused, color }) => (
               <TabIcon
                 icon={icons.plus}
