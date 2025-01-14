@@ -12,7 +12,6 @@ import * as Yup from "yup";
 import { Link, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import icons from "../../constants/icons";
-import { signIn } from "../../lib/appwrite";
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -27,12 +26,16 @@ const LoginScreen = () => {
       .required("Password is required"),
   });
 
+  const validatePassword = (password) => {
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.text(password);
+  };
   const handleLoginSubmit = async (values) => {
     try {
-      await signIn(values.email, values.password);
-      router.replace("/home");
+      const result = await registerUser(values.email, values.password);
     } catch (error) {
-      alert("Error", error.message);
+      Alert.alert("Something went wrong", error.message);
     }
   };
 
@@ -61,6 +64,7 @@ const LoginScreen = () => {
             values,
             errors,
             touched,
+            validatePassword,
           }) => (
             <View style={styles.container}>
               <View style={styles.input_container}>

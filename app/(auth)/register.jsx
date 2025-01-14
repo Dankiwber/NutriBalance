@@ -13,7 +13,7 @@ import * as Yup from "yup";
 import { Link, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import icons from "../../constants/icons";
-import { createUser } from "../../lib/appwrite";
+import { registerUser } from "../api/auth";
 
 const RegisterScreen = () => {
   const router = useRouter();
@@ -28,24 +28,27 @@ const RegisterScreen = () => {
       .email("Please enter a valid email address")
       .required("Email is required"),
     password: Yup.string()
-      .min(8, "Password must be at least 8 characters")
+      .matches(
+        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        "Password must 8 characters must include one uppercase, one lowercase, one number, one special character"
+      )
       .required("Password is required"),
+
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("password"), null], "Passwords must match")
       .required("Confirm Password is required"),
   });
 
   const handleRegisterSubmit = async (values) => {
-    console.log("Registering with values:", values);
     try {
-      const result = await createUser(
+      const result = await registerUser(
+        values.username,
         values.email,
-        values.password,
-        values.username
+        values.password
       );
-      alert("The account is successfully registered");
+      Alert.alert("Success!", result.message);
     } catch (error) {
-      Alert.alert("Error", error.message);
+      Alert.alert(error.message, "Please try again later");
     }
   };
 
@@ -72,6 +75,7 @@ const RegisterScreen = () => {
           onSubmit={handleRegisterSubmit}
         >
           {({
+            validatePassword,
             handleChange,
             handleBlur,
             handleSubmit,
@@ -206,7 +210,7 @@ const styles = StyleSheet.create({
   },
   login_container: {
     width: 360,
-    height: 460,
+    height: 500,
     marginHorizontal: "auto",
     backgroundColor: "#A7BFD6",
     borderRadius: 20,
@@ -264,11 +268,12 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   input_container: {
-    height: 80,
+    height: 95,
   },
   errorText: {
     color: "red",
     fontSize: 12,
+    width: 336,
     alignSelf: "flex-start",
   },
   create_button: {
