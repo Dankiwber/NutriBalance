@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Link, useRouter } from "expo-router";
+import { router, useRouter, Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import icons from "../../constants/icons";
 
@@ -111,9 +111,9 @@ const LoginScreen = () => {
               </View>
 
               <TouchableOpacity style={styles.forget_button}>
-                <Text style={styles.forget_button_text}>
+                <Link href="/resetPass" style={styles.forget_button_text}>
                   Forget your Password?
-                </Text>
+                </Link>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.login_button}
