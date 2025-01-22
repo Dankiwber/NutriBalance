@@ -6,12 +6,14 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { router, useRouter, Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import icons from "../../constants/icons";
+import { loginUser } from "../api/auth";
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -26,16 +28,12 @@ const LoginScreen = () => {
       .required("Password is required"),
   });
 
-  const validatePassword = (password) => {
-    const passwordRegex =
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return passwordRegex.text(password);
-  };
   const handleLoginSubmit = async (values) => {
     try {
-      const result = await registerUser(values.email, values.password);
+      const result = await loginUser(values.email, values.password);
+      console.log(result);
     } catch (error) {
-      Alert.alert("Something went wrong", error.message);
+      Alert.alert("Something went wrong", error.error);
     }
   };
 
