@@ -10,7 +10,10 @@ import {
 } from "react-native";
 import { BarChart } from "react-native-chart-kit";
 import icons from "../../constants/icons";
+import { router } from "expo-router/build";
+import Main_barchart from "../component/barchart";
 const App = () => {
+  const cal_count = 1800;
   const data = {
     labels: ["27", "28", "29", "30", "31", "1", "2"],
     datasets: [
@@ -33,8 +36,26 @@ const App = () => {
         </View>
       </View>
       <View style={styles.container}>
-        <Text style={styles.title}>Total cal Today:</Text>
-        <Text style={styles.calories}>1867 Cal</Text>
+        <TouchableOpacity
+          onPress={() => router.push("/create")}
+          style={styles.Add_foot_buttom}
+        >
+          <Image
+            style={styles.Add_foot_buttom_icon}
+            source={icons.add_food}
+            alt="LOGO"
+          />
+          <Text style={styles.Add_foot_buttom_text}>Add More Food</Text>
+        </TouchableOpacity>
+        <View>
+          <Text style={styles.calories_title}>Total cal Today:</Text>
+          <Text style={styles.calories}>
+            <Text style={styles.calories_count}>{cal_count}</Text> Cal
+          </Text>
+        </View>
+        <View style={styles.barchart_container}>
+          <Main_barchart />
+        </View>
       </View>
     </>
   );
@@ -55,29 +76,65 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   header_container_text: {
+    color: "#F16F98",
     fontSize: 27,
-    fontWeight: 600,
+    fontWeight: 700,
   },
   header_container_avatar: {
     height: 45,
     width: 45,
   },
   container: {
+    width: 360,
+    height: 340,
+    alignSelf: "center",
     marginTop: 15,
     padding: 20,
-    backgroundColor: "#D6E4F0",
+    backgroundColor: "#BCE2F2",
     borderRadius: 10,
   },
-  title: {
-    fontSize: 18,
+  Add_foot_buttom: {
+    alignItems: "center",
+    flexDirection: "row",
+    width: 150,
+    height: 34,
+    backgroundColor: "#7CACC0",
+    borderRadius: 10,
+    alignSelf: "flex-end",
+    justifyContent: "space-between",
+    paddingHorizontal: 7,
+  },
+  Add_foot_buttom_icon: {
+    height: 25,
+    width: 25,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 50,
+  },
+  Add_foot_buttom_text: {
+    fontWeight: 700,
+    color: "#E0E0E0",
+  },
+  calories_title: {
+    fontSize: 14,
+    fontWeight: 100,
     fontWeight: "bold",
-    marginBottom: 10,
   },
   calories: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: "bold",
     marginBottom: 20,
     color: "#D17A99",
+  },
+  calories_count: {
+    color: "#606060",
+    fontWeight: 500,
+  },
+  barchart_container: {
+    width: "100%", // 修改为百分比
+    maxWidth: 330, // 限制最大宽度
+    height: 220,
+    alignSelf: "center",
+    overflow: "hidden", // 防止超出容器
   },
 });
 

@@ -5,7 +5,9 @@ import logo from "../assets/icons/logo.png";
 import eye from "../assets/icons/eye.png";
 import no_eye from "../assets/icons/eye-hide.png";
 import default_av from "../assets/icons/default_avatar.png";
+import add_food from "../assets/icons/add_food.png";
 export default {
+  add_food,
   default_av,
   eye,
   no_eye,
