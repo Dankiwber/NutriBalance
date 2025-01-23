@@ -1,10 +1,11 @@
 import { View, Text } from "react-native";
 import React from "react";
+import { BarChart } from "react-native-gifted-charts";
 
 const profile = () => {
   return (
     <View>
-      <Text>profile</Text>
+      <BarChart data={[{ value: 100 }, { value: 150 }]} />
     </View>
   );
 };

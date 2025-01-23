@@ -13,7 +13,6 @@ import * as Yup from "yup";
 
 const ResetPasswordScreen = () => {
   const [step, setStep] = useState(1);
-  const [Useremail, setUseremail] = useState("");
   // 表单校验规则
   const validationSchemas = [
     Yup.object().shape({
