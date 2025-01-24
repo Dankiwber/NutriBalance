@@ -77,7 +77,7 @@ const TabLayout = () => {
           name="profile"
           options={{
             title: "Profile",
-            headerShown: true,
+            headerShown: false,
             tabBarIcon: ({ focused, color }) => (
               <TabIcon
                 icon={icons.profile}
