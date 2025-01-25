@@ -41,6 +41,11 @@ export default function Main_barchart() {
         hideYAxisText={true}
         yAxisThickness={0}
         xAxisThickness={2}
+        xAxisLabelTextStyle={{
+          fontSize: 14, // 调整字体大小
+          fontWeight: "800", // 设置字体粗细
+          color: "(32,32,32,1)",
+        }}
         showReferenceLine1
         referenceLine1Position={referenceLineValue}
         referenceLine1Config={{
@@ -64,16 +69,16 @@ export default function Main_barchart() {
         renderTooltip={(item, index) => {
           return (
             <View
+              class="z-40 ..."
               style={{
-                backgroundColor: "white",
-                borderRadius: 4,
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                borderWidth: 1,
+                left: -10,
+                marginBottom: 7,
                 borderColor: "#F16F98",
               }}
             >
-              <Text style={{ fontWeight: "bold" }}>{item.date}</Text>
+              <Text style={{ fontSize: 12, fontWeight: "bold" }}>
+                {item.date}
+              </Text>
             </View>
           );
         }}

@@ -130,7 +130,6 @@ const styles = StyleSheet.create({
   },
   barchart_container: {
     width: "100%", // 修改为百分比
-    maxWidth: 400, // 限制最大宽度
     height: 220,
     alignSelf: "center",
     overflow: "hidden", // 防止超出容器
