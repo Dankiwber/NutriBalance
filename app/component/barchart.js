@@ -30,7 +30,7 @@ export default function Main_barchart() {
   return (
     <View style={{ alignItems: "center", marginTop: 20 }}>
       <BarChart
-        maxValue={Math.max(...data.map((item) => item.value)) + 400}
+        maxValue={Math.max(...data.map((item) => item.value)) + 200}
         data={updatedData}
         barWidth={22}
         spacingAuto
@@ -40,10 +40,10 @@ export default function Main_barchart() {
         barBorderRadius={5}
         hideYAxisText={true}
         yAxisThickness={0}
-        xAxisThickness={2}
+        xAxisThickness={1}
         xAxisLabelTextStyle={{
           fontSize: 14, // 调整字体大小
-          fontWeight: "800", // 设置字体粗细
+          fontWeight: "700", // 设置字体粗细
           color: "(32,32,32,1)",
         }}
         showReferenceLine1
@@ -76,7 +76,13 @@ export default function Main_barchart() {
                 borderColor: "#F16F98",
               }}
             >
-              <Text style={{ fontSize: 12, fontWeight: "bold" }}>
+              <Text
+                style={{
+                  fontSize: 13,
+                  color: "#0080FF",
+                  fontWeight: "800",
+                }}
+              >
                 {item.date}
               </Text>
             </View>
