@@ -122,7 +122,6 @@ const styles = StyleSheet.create({
   calories: {
     fontSize: 30,
     fontWeight: "bold",
-    marginBottom: 20,
     color: "#D17A99",
   },
   calories_count: {
@@ -131,7 +130,7 @@ const styles = StyleSheet.create({
   },
   barchart_container: {
     width: "100%", // 修改为百分比
-    maxWidth: 330, // 限制最大宽度
+    maxWidth: 400, // 限制最大宽度
     height: 220,
     alignSelf: "center",
     overflow: "hidden", // 防止超出容器
