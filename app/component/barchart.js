@@ -1,12 +1,10 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import { View, Text } from "react-native";
+import React from "react";
 import { BarChart } from "react-native-gifted-charts";
 
-export default function Main_barchart() {
-  const [selectedDate, setSelectedDate] = useState(null);
-
+export default function MainBarChart() {
   const data = [
-    { value: 1500, label: "Mon", date: "JAN 01" },
+    { value: 1800, label: "Mon", date: "JAN 01" },
     { value: 2150, label: "Tue", date: "JAN 02" },
     { value: 1930, label: "Wed", date: "JAN 03" },
     { value: 1300, label: "Thu", date: "JAN 04" },
@@ -15,10 +13,9 @@ export default function Main_barchart() {
     { value: 1700, label: "Sun", date: "JAN 07" },
   ];
 
-  // 参考线值
-  const referenceLineValue = 1700;
+  const referenceLineValue = 1800;
 
-  // 处理数据，动态调整透明度
+  // 更新数据以调整透明度
   const updatedData = data.map((item) => ({
     ...item,
     frontColor:
@@ -30,7 +27,7 @@ export default function Main_barchart() {
   return (
     <View style={{ alignItems: "center", marginTop: 20 }}>
       <BarChart
-        maxValue={Math.max(...data.map((item) => item.value)) + 200}
+        maxValue={Math.max(...data.map((item) => item.value)) + 450}
         data={updatedData}
         barWidth={22}
         spacingAuto
@@ -38,55 +35,52 @@ export default function Main_barchart() {
         width={400}
         height={170}
         barBorderRadius={5}
-        hideYAxisText={true}
+        hideYAxisText
         yAxisThickness={0}
         xAxisThickness={1}
         xAxisLabelTextStyle={{
-          fontSize: 14, // 调整字体大小
-          fontWeight: "700", // 设置字体粗细
-          color: "(32,32,32,1)",
+          fontSize: 14,
+          fontWeight: "700",
+          color: "rgb(32,32,32)",
         }}
+        renderTooltip={(item) => (
+          <View
+            style={{
+              padding: 5,
+              left: -20,
+              borderRadius: 5,
+              elevation: 3,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 12,
+                color: "#0080FF",
+                fontWeight: "800",
+                textAlign: "center",
+              }}
+            >
+              {item.date}
+            </Text>
+            <Text
+              style={{
+                fontSize: 13,
+                color: "rgba(255, 51, 153, 1)",
+                fontWeight: "800",
+                textAlign: "center",
+              }}
+            >
+              {`${item.value}cal`}
+            </Text>
+          </View>
+        )}
         showReferenceLine1
         referenceLine1Position={referenceLineValue}
         referenceLine1Config={{
-          color: "gray",
+          color: "rgba(0, 0, 0, 0.2)",
           dashWidth: 4,
           dashGap: 6,
-          thickness: 1,
-          labelText: `${referenceLineValue} cal`,
-          labelTextStyle: {
-            color: "#FF3399",
-            fontSize: 15,
-            fontWeight: "bold",
-            left: -5,
-          },
-        }}
-        // 处理点击事件
-        onBarPress={(item, index) => {
-          setSelectedDate(item.date);
-        }}
-        // 自定义tooltip
-        renderTooltip={(item, index) => {
-          return (
-            <View
-              class="z-40 ..."
-              style={{
-                left: -10,
-                marginBottom: 7,
-                borderColor: "#F16F98",
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 13,
-                  color: "#0080FF",
-                  fontWeight: "800",
-                }}
-              >
-                {item.date}
-              </Text>
-            </View>
-          );
+          thickness: 2,
         }}
       />
     </View>
