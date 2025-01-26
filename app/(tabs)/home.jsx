@@ -8,20 +8,14 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
-import { BarChart } from "react-native-chart-kit";
 import icons from "../../constants/icons";
 import { router } from "expo-router/build";
 import Main_barchart from "../component/barchart";
+import Dist_chart from "../component/nutri_dist";
+import Dount_chart from "../component/donut_chart";
 const App = () => {
+  const goal_cal = 2400;
   const cal_count = 1800;
-  const data = {
-    labels: ["27", "28", "29", "30", "31", "1", "2"],
-    datasets: [
-      {
-        data: [15, 30, 45, 60, 20, 80, 55],
-      },
-    ],
-  };
 
   return (
     <>
@@ -47,15 +41,30 @@ const App = () => {
           />
           <Text style={styles.Add_foot_buttom_text}>Add More Food</Text>
         </TouchableOpacity>
-        <View>
-          <Text style={styles.calories_title}>Total cal Today:</Text>
-          <Text style={styles.calories}>
-            <Text style={styles.calories_count}>{cal_count}</Text> Cal
-          </Text>
+        <View style={styles.calories_row}>
+          <View>
+            <Text style={styles.calories_title}>Total cal Today:</Text>
+            <Text style={styles.calories}>
+              <Text style={styles.calories_count}>{cal_count}</Text> Cal
+            </Text>
+          </View>
+          <View>
+            <Text style={styles.calories_title}>Need for today:</Text>
+            <Text style={styles.calories_2}>
+              <Text style={styles.calories_count_2}>
+                {goal_cal - cal_count}
+              </Text>
+              Cal
+            </Text>
+          </View>
         </View>
         <View style={styles.barchart_container}>
           <Main_barchart />
         </View>
+      </View>
+      <View className="flex-row justify-evenly">
+        <Dist_chart />
+        <Dount_chart />
       </View>
     </>
   );
@@ -85,7 +94,7 @@ const styles = StyleSheet.create({
     width: 45,
   },
   container: {
-    width: 360,
+    width: "90%",
     height: 340,
     alignSelf: "center",
     marginTop: 15,
@@ -114,19 +123,31 @@ const styles = StyleSheet.create({
     fontWeight: 700,
     color: "#E0E0E0",
   },
+  calories_row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   calories_title: {
     fontSize: 14,
-    fontWeight: 100,
     fontWeight: "bold",
   },
   calories: {
     fontSize: 30,
     fontWeight: "bold",
-    color: "#D17A99",
+    color: "#606060",
+  },
+  calories_2: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#606060",
   },
   calories_count: {
-    color: "#606060",
-    fontWeight: 500,
+    color: "#D17A99",
+    fontWeight: 600,
+  },
+  calories_count_2: {
+    color: "#0080FF",
+    fontWeight: 600,
   },
   barchart_container: {
     width: "100%", // 修改为百分比
