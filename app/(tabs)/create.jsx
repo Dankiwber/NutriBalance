@@ -6,20 +6,49 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
+import { chatbot_query } from "../api/auth";
 
 const create = () => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (userInput.trim()) {
+      // 1. 立即显示用户的消息
       setMessages((prevMessages) => [
         ...prevMessages,
         { type: "user", text: userInput },
-        { type: "bot", text: "Is the following list correct?" },
       ]);
-      setUserInput("");
+      setUserInput(""); // 清空输入框
+
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { type: "bot", text: "Analyzing ...", isLoading: true }, // 添加 isLoading 标志
+      ]);
+      setIsLoading(true); // 开始加载
+
+      try {
+        const ans = await chatbot_query(userInput.trim());
+
+        // 如果 ans 是空字符串，显示默认提示
+        const botMessage = ans === "" ? "No data found." : ans;
+
+        setMessages((prevMessages) => [
+          ...prevMessages.slice(0, -1), // 移除“Analyzing ...”的消息
+          { type: "bot", text: botMessage }, // 添加机器人回复
+        ]);
+      } catch (error) {
+        console.log(error);
+        setMessages((prevMessages) => [
+          ...prevMessages.slice(0, -1), // 移除“Analyzing ...”的消息
+          { type: "bot", text: error.error || "An error occurred." }, // 添加错误信息
+        ]);
+      }
+
+      setIsLoading(false); // 结束加载
     }
   };
 
@@ -43,7 +72,14 @@ const create = () => {
               message.type === "user" ? styles.userMessage : styles.botMessage,
             ]}
           >
-            <Text style={styles.messageText}>{message.text}</Text>
+            {message.isLoading ? ( // 如果是“Analyzing ...”，显示加载动画
+              <View style={styles.loadingContainer}>
+                <Text style={styles.messageText}>{message.text}</Text>
+                <ActivityIndicator size="small" color="#0000ff" />
+              </View>
+            ) : (
+              <Text style={styles.messageText}>{message.text}</Text>
+            )}
           </View>
         ))}
       </ScrollView>
@@ -101,6 +137,10 @@ const styles = StyleSheet.create({
   },
   messageText: {
     fontSize: 16,
+  },
+  loadingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   inputArea: {
     flexDirection: "row",
