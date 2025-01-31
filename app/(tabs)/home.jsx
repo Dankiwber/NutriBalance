@@ -63,8 +63,12 @@ const App = () => {
         </View>
       </View>
       <View className="flex-row justify-evenly">
-        <Dist_chart />
-        <Dount_chart />
+        <View style={styles.chart_container}>
+          <Dist_chart />
+        </View>
+        <View style={styles.chart_container}>
+          <Dount_chart />
+        </View>
       </View>
     </>
   );
@@ -154,6 +158,12 @@ const styles = StyleSheet.create({
     height: 220,
     alignSelf: "center",
     overflow: "hidden", // 防止超出容器
+  },
+  chart_container: {
+    backgroundColor: "#FDB5C5",
+    width: "43%",
+    height: "180",
+    borderRadius: 15,
   },
 });
 

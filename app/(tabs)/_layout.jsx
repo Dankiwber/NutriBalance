@@ -7,7 +7,7 @@ const TabIcon = ({ icon, name, focused, color }) => {
 
   return (
     <View
-      className="items-center justify-center gap-2 top-6
+      className="items-center justify-center gap-2 top-3
     "
     >
       <Image
