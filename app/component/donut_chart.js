@@ -16,18 +16,23 @@ export default function dount_chart() {
     { value: 20, color: "#8B5ECC" },
   ];
   return (
-    <View>
+    <View style={style.container}>
       <PieChart
         donut
         innerRadius={45}
         innerCircleColor="#FDB5C5"
-        radius={75}
+        radius={70}
         data={pieData}
         centerLabelComponent={() => {
           return (
             <View>
               <Text
-                style={{ color: "black", fontSize: 14, textAlign: "center" }}
+                style={{
+                  color: "black",
+                  fontSize: 15,
+                  fontWeight: "500",
+                  textAlign: "center",
+                }}
               >
                 {" "}
                 daily ratio{" "}
@@ -50,4 +55,9 @@ export default function dount_chart() {
     </View>
   );
 }
-const style = StyleSheet.create({});
+const style = StyleSheet.create({
+  container: {
+    marginTop: 10,
+    alignSelf: "center",
+  },
+});

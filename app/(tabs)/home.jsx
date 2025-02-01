@@ -11,7 +11,7 @@ import {
 import icons from "../../constants/icons";
 import { router } from "expo-router/build";
 import Main_barchart from "../component/barchart";
-import Dist_chart from "../component/nutri_dist";
+import ProgressBar from "../component/nutri_dist";
 import Dount_chart from "../component/donut_chart";
 const App = () => {
   const goal_cal = 2400;
@@ -62,14 +62,65 @@ const App = () => {
           <Main_barchart />
         </View>
       </View>
-      <View className="flex-row justify-evenly">
+      <View style={styles.two_chart_container}>
         <View style={styles.chart_container}>
-          <Dist_chart />
+          <Text style={styles.nutri_dist_text}>Nutrition distribution</Text>
+          <ProgressBar
+            label="Fat"
+            progress={60}
+            duration={1500}
+            color="#007387"
+          />
+          <ProgressBar
+            label="Carb"
+            progress={90}
+            duration={1500}
+            color="#C2537C"
+          />
+          <ProgressBar
+            label="Protein"
+            progress={50}
+            duration={1500}
+            color="#8B5ECC"
+          />
         </View>
         <View style={styles.chart_container}>
           <Dount_chart />
+          <View style={styles.bulletContainer}>
+            {/* Fat */}
+            <View style={styles.bulletItem}>
+              <View
+                style={[styles.bulletCircle, { backgroundColor: "#007387" }]}
+              />
+              <Text style={styles.bulletText}>Fat</Text>
+            </View>
+            {/* Carb */}
+            <View style={styles.bulletItem}>
+              <View
+                style={[styles.bulletCircle, { backgroundColor: "#C2537C" }]}
+              />
+              <Text style={styles.bulletText}>Carb</Text>
+            </View>
+            {/* Protein */}
+            <View style={styles.bulletItem}>
+              <View
+                style={[styles.bulletCircle, { backgroundColor: "#8B5ECC" }]}
+              />
+              <Text style={styles.bulletText}>Protein</Text>
+            </View>
+          </View>
         </View>
       </View>
+      <View
+        style={{
+          marginTop: 5,
+          height: 135,
+          borderRadius: 15,
+          width: "90%",
+          backgroundColor: "#BCE2F2",
+          alignSelf: "center",
+        }}
+      ></View>
     </>
   );
 };
@@ -159,11 +210,49 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     overflow: "hidden", // 防止超出容器
   },
+  two_chart_container: {
+    flexDirection: "row",
+    width: "92%",
+    alignSelf: "center",
+    justifyContent: "space-around",
+  },
   chart_container: {
+    marginTop: 5,
     backgroundColor: "#FDB5C5",
-    width: "43%",
-    height: "180",
+    width: "48%",
+    height: 180,
+
     borderRadius: 15,
+    padding: 0,
+  },
+  nutri_dist_text: {
+    marginTop: 15,
+    fontWeight: "bold",
+    color: "#6666FF",
+    marginLeft: 5,
+  },
+  bulletContainer: {
+    marginTop: 7,
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 10, // 左右边距
+  },
+  bulletItem: {
+    marginLeft: 5,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  bulletCircle: {
+    width: 10,
+    height: 10,
+    borderRadius: 4, // 圆形
+    marginRight: 2, // 圆圈与文本的间距
+  },
+  bulletText: {
+    fontSize: 12,
+    fontWeight: 500,
+    color: "#000000", // 文本颜色
   },
 });
 
