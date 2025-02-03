@@ -1,19 +1,48 @@
 import { View, Text } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BarChart } from "react-native-gifted-charts";
-
+import * as SecureStore from "expo-secure-store";
 export default function MainBarChart() {
+  const [usedat_arr, setdat_arr] = useState([]);
+  const [useintake_arr, setintake_arr] = useState([]);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const data = await SecureStore.getItemAsync("userData");
+        const userData = JSON.parse(data);
+        const dat_arr = [];
+        const intake_arr = [];
+        for (const key in userData["weekly_intake"]) {
+          intake_arr.push(String(userData["weekly_intake"][key]));
+          const [year, month, day] = key.split("-");
+          const date = new Date(year, month - 1, day);
+          const formattedDate = date.toLocaleString("en-US", {
+            month: "short",
+            day: "2-digit",
+          });
+          dat_arr.push(formattedDate);
+        }
+        console.log(dat_arr);
+        console.log(intake_arr);
+        setdat_arr(dat_arr);
+        setintake_arr(intake_arr);
+      } catch (error) {
+        console.error("Failed to fetch user data", error);
+      }
+    };
+    fetchUserData();
+  }, []);
   const data = [
-    { value: 1800, label: "Mon", date: "JAN 01" },
-    { value: 2150, label: "Tue", date: "JAN 02" },
-    { value: 1930, label: "Wed", date: "JAN 03" },
-    { value: 1300, label: "Thu", date: "JAN 04" },
-    { value: 2400, label: "Fri", date: "JAN 05" },
-    { value: 2100, label: "Sat", date: "JAN 06" },
-    { value: 1700, label: "Sun", date: "JAN 07" },
+    { value: useintake_arr[0], label: "Mon", date: usedat_arr[0] },
+    { value: useintake_arr[1], label: "Tue", date: usedat_arr[1] },
+    { value: useintake_arr[2], label: "Wed", date: usedat_arr[2] },
+    { value: useintake_arr[3], label: "Thu", date: usedat_arr[3] },
+    { value: useintake_arr[4], label: "Fri", date: usedat_arr[4] },
+    { value: useintake_arr[5], label: "Sat", date: usedat_arr[5] },
+    { value: useintake_arr[6], label: "Sun", date: usedat_arr[6] },
   ];
 
-  const referenceLineValue = 1800;
+  const referenceLineValue = 2200;
 
   // 更新数据以调整透明度
   const updatedData = data.map((item) => ({
@@ -27,7 +56,7 @@ export default function MainBarChart() {
   return (
     <View style={{ alignItems: "center", marginTop: 20 }}>
       <BarChart
-        maxValue={Math.max(...data.map((item) => item.value)) + 450}
+        maxValue={Math.max(...data.map((item) => item.value)) + 650}
         data={updatedData}
         barWidth={22}
         spacingAuto

@@ -1,7 +1,7 @@
-const BASE_URL = "http://<your-backend-ip>:3000/api";
+const BASE_URL = "http://192.168.1.66:3000/data";
 
 export const getUserProfile = async (token) => {
-  const response = await fetch(`${BASE_URL}/profile`, {
+  const response = await fetch(`${BASE_URL}/weekly_cal`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,

@@ -1,11 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import * as SecureStore from "expo-secure-store";
 import icons from "../../constants/icons";
-
+import { logoutUser } from "../api/auth";
 const ProfileScreen = () => {
+  const [userName, setUserName] = useState("");
+  const [userToken, setUserToken] = useState("");
+  const handleLogout = async (token) => {
+    try {
+      const result = await logoutUser(token);
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = await SecureStore.getItemAsync("userToken");
+        const name = await SecureStore.getItemAsync("userName");
+        if (token) setUserToken(token);
+        if (name) setUserName(name);
+      } catch (error) {
+        console.error("Failed to fetch user data", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
       <ScrollView>
@@ -25,7 +51,9 @@ const ProfileScreen = () => {
               source={icons.default_av}
               className="w-28 h-28 rounded-full border-4 border-white"
             />
-            <Text className="text-white text-2xl font-bold mt-4">John Doe</Text>
+            <Text className="text-white text-2xl font-bold mt-4">
+              {userName}
+            </Text>
             <Text className="text-blue-200">john.doe@example.com</Text>
           </View>
         </View>
@@ -74,7 +102,12 @@ const ProfileScreen = () => {
 
           {/* Logout Button */}
           <TouchableOpacity
-            onPress={() => router.push("/signin")}
+            onPress={() => {
+              handleLogout(userToken);
+              SecureStore.deleteItemAsync("userToken");
+              SecureStore.deleteItemAsync("userName");
+              router.push("/signin");
+            }}
             className="bg-red-500 mt-4 p-4 rounded-lg items-center shadow-md"
           >
             <Text className="text-white text-lg font-semibold">Log Out</Text>

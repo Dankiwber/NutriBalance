@@ -51,7 +51,8 @@
     "react-native-webview": "13.12.5",
     "victory": "^37.3.5",
     "victory-native": "^41.14.0",
-    "yup": "^1.6.1"
+    "yup": "^1.6.1",
+    "expo-secure-store": "~14.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",

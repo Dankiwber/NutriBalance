@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import * as SecureStore from "expo-secure-store";
 import {
   Image,
   View,
@@ -7,6 +8,7 @@ import {
   Text,
   StyleSheet,
   Alert,
+  ScrollView,
 } from "react-native";
 import icons from "../../constants/icons";
 import { router } from "expo-router/build";
@@ -14,8 +16,30 @@ import Main_barchart from "../component/barchart";
 import ProgressBar from "../component/nutri_dist";
 import Dount_chart from "../component/donut_chart";
 const App = () => {
+  const [nutri_goal, setNurti_goal] = useState([0, 0, 0]);
+  const [cal_count, setCal_count] = useState(0);
   const goal_cal = 2400;
-  const cal_count = 1800;
+  const goal_dist = [85, 225, 275];
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const data = await SecureStore.getItemAsync("userData");
+        const userData = JSON.parse(data);
+        const daily_arr = [
+          Math.round((userData["daily_intake"][0] / goal_dist[0]) * 100),
+          Math.round((userData["daily_intake"][1] / goal_dist[1]) * 100),
+          Math.round((userData["daily_intake"][2] / goal_dist[2]) * 100),
+        ];
+        setNurti_goal(daily_arr);
+        setCal_count(userData["daily_intake"][3]);
+      } catch (error) {
+        console.error("Failed to fetch user data", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   return (
     <>
@@ -29,98 +53,100 @@ const App = () => {
           />
         </View>
       </View>
-      <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => router.push("/create")}
-          style={styles.Add_foot_buttom}
-        >
-          <Image
-            style={styles.Add_foot_buttom_icon}
-            source={icons.add_food}
-            alt="LOGO"
-          />
-          <Text style={styles.Add_foot_buttom_text}>Add More Food</Text>
-        </TouchableOpacity>
-        <View style={styles.calories_row}>
-          <View>
-            <Text style={styles.calories_title}>Total cal Today:</Text>
-            <Text style={styles.calories}>
-              <Text style={styles.calories_count}>{cal_count}</Text> Cal
-            </Text>
-          </View>
-          <View>
-            <Text style={styles.calories_title}>Need for today:</Text>
-            <Text style={styles.calories_2}>
-              <Text style={styles.calories_count_2}>
-                {goal_cal - cal_count}
+      <ScrollView>
+        <View style={styles.container}>
+          <TouchableOpacity
+            onPress={() => router.push("/create")}
+            style={styles.Add_foot_buttom}
+          >
+            <Image
+              style={styles.Add_foot_buttom_icon}
+              source={icons.add_food}
+              alt="LOGO"
+            />
+            <Text style={styles.Add_foot_buttom_text}>Add More Food</Text>
+          </TouchableOpacity>
+          <View style={styles.calories_row}>
+            <View>
+              <Text style={styles.calories_title}>Total cal Today:</Text>
+              <Text style={styles.calories}>
+                <Text style={styles.calories_count}>{cal_count}</Text> Cal
               </Text>
-              Cal
-            </Text>
-          </View>
-        </View>
-        <View style={styles.barchart_container}>
-          <Main_barchart />
-        </View>
-      </View>
-      <View style={styles.two_chart_container}>
-        <View style={styles.chart_container}>
-          <Text style={styles.nutri_dist_text}>Nutrition distribution</Text>
-          <ProgressBar
-            label="Fat"
-            progress={60}
-            duration={1500}
-            color="#007387"
-          />
-          <ProgressBar
-            label="Carb"
-            progress={90}
-            duration={1500}
-            color="#C2537C"
-          />
-          <ProgressBar
-            label="Protein"
-            progress={50}
-            duration={1500}
-            color="#8B5ECC"
-          />
-        </View>
-        <View style={styles.chart_container}>
-          <Dount_chart />
-          <View style={styles.bulletContainer}>
-            {/* Fat */}
-            <View style={styles.bulletItem}>
-              <View
-                style={[styles.bulletCircle, { backgroundColor: "#007387" }]}
-              />
-              <Text style={styles.bulletText}>Fat</Text>
             </View>
-            {/* Carb */}
-            <View style={styles.bulletItem}>
-              <View
-                style={[styles.bulletCircle, { backgroundColor: "#C2537C" }]}
-              />
-              <Text style={styles.bulletText}>Carb</Text>
-            </View>
-            {/* Protein */}
-            <View style={styles.bulletItem}>
-              <View
-                style={[styles.bulletCircle, { backgroundColor: "#8B5ECC" }]}
-              />
-              <Text style={styles.bulletText}>Protein</Text>
+            <View>
+              <Text style={styles.calories_title}>Need for today:</Text>
+              <Text style={styles.calories_2}>
+                <Text style={styles.calories_count_2}>
+                  {goal_cal - cal_count}
+                </Text>
+                Cal
+              </Text>
             </View>
           </View>
+          <View style={styles.barchart_container}>
+            <Main_barchart />
+          </View>
         </View>
-      </View>
-      <View
-        style={{
-          marginTop: 5,
-          height: 135,
-          borderRadius: 15,
-          width: "90%",
-          backgroundColor: "#BCE2F2",
-          alignSelf: "center",
-        }}
-      ></View>
+        <View style={styles.two_chart_container}>
+          <View style={styles.chart_container}>
+            <Text style={styles.nutri_dist_text}>Nutrition distribution</Text>
+            <ProgressBar
+              label="Fat"
+              progress={nutri_goal[0]}
+              duration={1500}
+              color="#007387"
+            />
+            <ProgressBar
+              label="Carb"
+              progress={nutri_goal[1]}
+              duration={1500}
+              color="#C2537C"
+            />
+            <ProgressBar
+              label="Protein"
+              progress={nutri_goal[2]}
+              duration={1500}
+              color="#8B5ECC"
+            />
+          </View>
+          <View style={styles.chart_container}>
+            <Dount_chart />
+            <View style={styles.bulletContainer}>
+              {/* Fat */}
+              <View style={styles.bulletItem}>
+                <View
+                  style={[styles.bulletCircle, { backgroundColor: "#007387" }]}
+                />
+                <Text style={styles.bulletText}>Fat</Text>
+              </View>
+              {/* Carb */}
+              <View style={styles.bulletItem}>
+                <View
+                  style={[styles.bulletCircle, { backgroundColor: "#C2537C" }]}
+                />
+                <Text style={styles.bulletText}>Carb</Text>
+              </View>
+              {/* Protein */}
+              <View style={styles.bulletItem}>
+                <View
+                  style={[styles.bulletCircle, { backgroundColor: "#8B5ECC" }]}
+                />
+                <Text style={styles.bulletText}>Protein</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          style={{
+            marginTop: 5,
+            height: 135,
+            borderRadius: 15,
+            width: "90%",
+            backgroundColor: "#BCE2F2",
+            alignSelf: "center",
+          }}
+        ></View>
+      </ScrollView>
     </>
   );
 };

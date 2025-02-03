@@ -1,5 +1,6 @@
 import axios from "axios";
 const BASE_URL = "http://192.168.1.66:3000/api";
+const BASE_URL_data = "http://192.168.1.66:3000/data";
 
 export const registerUser = async (username, email, password) => {
   const response = await fetch(`${BASE_URL}/register`, {
@@ -18,13 +19,11 @@ export const registerUser = async (username, email, password) => {
 
 export const loginUser = async (email, password) => {
   try {
-    console.log("Logging in with email:", email);
     const response = await axios.post(`${BASE_URL}/login`, {
       email: email,
       password: password,
     });
 
-    console.log("Post successful:", response.data);
     return response.data; // 返回请求结果
   } catch (error) {
     throw error.response.data; // 抛出错误，以便调用者可以处理
@@ -96,10 +95,40 @@ export const chatbot_query = async (input_query) => {
   }
 };
 
+export const logoutUser = async (token) => {
+  const response = await fetch(`${BASE_URL}/logout`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error || "获取用户信息失败");
+  }
+  return data;
+};
+
+export const getdata = async (token) => {
+  const response = await fetch(`${BASE_URL_data}/weekly_cal`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error || "获取用户信息失败");
+  }
+  return data;
+};
+
 export default {
   registerUser,
   loginUser,
   rest_password_email,
   verify_code,
   password_change,
+  logoutUser,
+  getdata,
 };

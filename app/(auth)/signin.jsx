@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import * as SecureStore from "expo-secure-store";
 import {
   Image,
   View,
@@ -13,7 +14,7 @@ import * as Yup from "yup";
 import { router, useRouter, Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import icons from "../../constants/icons";
-import { loginUser } from "../api/auth";
+import { loginUser, getdata } from "../api/auth";
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -31,7 +32,17 @@ const LoginScreen = () => {
   const handleLoginSubmit = async (values) => {
     try {
       const result = await loginUser(values.email, values.password);
-      console.log(result);
+
+      try {
+        const user_data = await getdata(result.token);
+        await SecureStore.setItemAsync("userData", JSON.stringify(user_data));
+        await SecureStore.setItemAsync("userToken", result.token);
+        await SecureStore.setItemAsync("userName", result.name);
+
+        router.push("/home");
+      } catch (error) {
+        console.error("Failed to save token", error);
+      }
     } catch (error) {
       Alert.alert("Something went wrong", error.error);
     }
