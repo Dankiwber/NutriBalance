@@ -18,12 +18,16 @@ import Dount_chart from "../component/donut_chart";
 const App = () => {
   const [nutri_goal, setNurti_goal] = useState([0, 0, 0]);
   const [cal_count, setCal_count] = useState(0);
-  const goal_cal = 2400;
+  const [goal_cal, setGoal_cal] = useState(0);
   const goal_dist = [85, 225, 275];
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        const info = await SecureStore.getItemAsync("userInfo");
+        const userInfo = JSON.parse(info);
+        const userGoal = userInfo["daily_goal"];
+        setGoal_cal(userGoal);
         const data = await SecureStore.getItemAsync("userData");
         const userData = JSON.parse(data);
         const daily_arr = [

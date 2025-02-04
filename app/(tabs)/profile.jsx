@@ -9,6 +9,9 @@ import { logoutUser } from "../api/auth";
 const ProfileScreen = () => {
   const [userName, setUserName] = useState("");
   const [userToken, setUserToken] = useState("");
+  const [userAge, setUserAge] = useState(0);
+  const [userGoal, setUserGoal] = useState(0);
+  const [userGender, setUserGender] = useState("undefine");
   const handleLogout = async (token) => {
     try {
       const result = await logoutUser(token);
@@ -20,6 +23,14 @@ const ProfileScreen = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        const info = await SecureStore.getItemAsync("userInfo");
+        const userInfo = JSON.parse(info);
+        const userGol = userInfo["daily_goal"];
+        const userAge = userInfo["age"];
+        const userGen = userInfo["gender"];
+        setUserGoal(userGol);
+        setUserAge(userAge);
+        setUserGender(userGen);
         const token = await SecureStore.getItemAsync("userToken");
         const name = await SecureStore.getItemAsync("userName");
         if (token) setUserToken(token);
@@ -65,8 +76,8 @@ const ProfileScreen = () => {
               Personal Information
             </Text>
             <View className="border-b border-gray-300 my-2" />
-            <Text className="text-gray-500">Gender: Male</Text>
-            <Text className="text-gray-500 mt-2">Age: 28</Text>
+            <Text className="text-gray-500">Gender: {userGender}</Text>
+            <Text className="text-gray-500 mt-2">Age: {userAge}</Text>
             <Text className="text-gray-500 mt-2">
               Location: Toronto, Canada
             </Text>
@@ -82,10 +93,10 @@ const ProfileScreen = () => {
             </View>
             <View className="bg-white shadow-lg p-6 rounded-lg w-[48%] items-center">
               <Text className="text-gray-600 text-lg font-semibold">
-                Calories
+                daily Calorie Goal
               </Text>
               <Text className="text-blue-500 text-2xl font-bold mt-2">
-                12,400
+                {userGoal}
               </Text>
             </View>
           </View>

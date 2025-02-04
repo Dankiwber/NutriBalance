@@ -123,6 +123,20 @@ export const getdata = async (token) => {
   return data;
 };
 
+export const getuserInfo = async (token) => {
+  const response = await fetch(`${BASE_URL_data}/user_info`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error || "获取用户信息失败");
+  }
+  return data;
+};
+
 export default {
   registerUser,
   loginUser,
@@ -131,4 +145,5 @@ export default {
   password_change,
   logoutUser,
   getdata,
+  getuserInfo,
 };

@@ -14,7 +14,7 @@ import * as Yup from "yup";
 import { router, useRouter, Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import icons from "../../constants/icons";
-import { loginUser, getdata } from "../api/auth";
+import { loginUser, getdata, getuserInfo } from "../api/auth";
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -35,6 +35,11 @@ const LoginScreen = () => {
 
       try {
         const user_data = await getdata(result.token);
+        const user_info = await getuserInfo(result.token);
+        await SecureStore.setItemAsync(
+          "userInfo",
+          JSON.stringify(user_info["userinfo"])
+        );
         await SecureStore.setItemAsync("userData", JSON.stringify(user_data));
         await SecureStore.setItemAsync("userToken", result.token);
         await SecureStore.setItemAsync("userName", result.name);
