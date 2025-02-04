@@ -1,47 +1,86 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as SecureStore from "expo-secure-store";
 import icons from "../../constants/icons";
 import { logoutUser } from "../api/auth";
+
 const ProfileScreen = () => {
   const [userName, setUserName] = useState("");
   const [userToken, setUserToken] = useState("");
-  const [userAge, setUserAge] = useState(0);
-  const [userGoal, setUserGoal] = useState(0);
-  const [userGender, setUserGender] = useState("undefine");
-  const handleLogout = async (token) => {
+  const [userAge, setUserAge] = useState(null);
+  const [userGoal, setUserGoal] = useState(null);
+  const [userGender, setUserGender] = useState(undefined);
+
+  const handleLogout = async () => {
     try {
-      const result = await logoutUser(token);
-      console.log(result);
+      if (!userToken) {
+        console.warn("User is already logged out.");
+        return;
+      }
+
+      await logoutUser(userToken);
+
+      // 清除 SecureStore 存储
+      await SecureStore.deleteItemAsync("userToken");
+      await SecureStore.deleteItemAsync("userName");
+      await SecureStore.deleteItemAsync("userDate");
+      await SecureStore.deleteItemAsync("userInfo");
+
+      // 清空状态触发 UI 更新
+      setUserToken("");
+      setUserName("");
+      setUserAge(null);
+      setUserGoal(null);
+      setUserGender(undefined);
+
+      // 替换到登录界面，防止手势返回
+      router.replace("/signin");
     } catch (error) {
-      console.error(error);
+      console.error("Logout failed:", error);
+      Alert.alert("Logout Error", "Something went wrong while logging out.");
     }
   };
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const info = await SecureStore.getItemAsync("userInfo");
-        const userInfo = JSON.parse(info);
-        const userGol = userInfo["daily_goal"];
-        const userAge = userInfo["age"];
-        const userGen = userInfo["gender"];
-        setUserGoal(userGol);
-        setUserAge(userAge);
-        setUserGender(userGen);
+        if (info) {
+          const userInfo = JSON.parse(info);
+          setUserGoal(userInfo["daily_goal"] || 0);
+          setUserAge(userInfo["age"] || 0);
+          setUserGender(userInfo["gender"] || "Unknown");
+        }
+
         const token = await SecureStore.getItemAsync("userToken");
         const name = await SecureStore.getItemAsync("userName");
+
         if (token) setUserToken(token);
         if (name) setUserName(name);
       } catch (error) {
-        console.error("Failed to fetch user data", error);
+        console.error("Failed to fetch user data:", error);
       }
     };
 
     fetchUserData();
   }, []);
+
+  // 如果用户 Token 为空，防止 Profile 被访问，自动跳转到登录页面
+  useEffect(() => {
+    if (!userToken) {
+      router.replace("/signin");
+    }
+  }, [userToken]);
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
@@ -63,7 +102,7 @@ const ProfileScreen = () => {
               className="w-28 h-28 rounded-full border-4 border-white"
             />
             <Text className="text-white text-2xl font-bold mt-4">
-              {userName}
+              {userName || "Guest"}
             </Text>
             <Text className="text-blue-200">john.doe@example.com</Text>
           </View>
@@ -93,10 +132,10 @@ const ProfileScreen = () => {
             </View>
             <View className="bg-white shadow-lg p-6 rounded-lg w-[48%] items-center">
               <Text className="text-gray-600 text-lg font-semibold">
-                daily Calorie Goal
+                Daily Calorie Goal
               </Text>
               <Text className="text-blue-500 text-2xl font-bold mt-2">
-                {userGoal}
+                {userGoal || 0}
               </Text>
             </View>
           </View>
@@ -113,12 +152,16 @@ const ProfileScreen = () => {
 
           {/* Logout Button */}
           <TouchableOpacity
-            onPress={() => {
-              handleLogout(userToken);
-              SecureStore.deleteItemAsync("userToken");
-              SecureStore.deleteItemAsync("userName");
-              router.push("/signin");
-            }}
+            onPress={() =>
+              Alert.alert(
+                "Confirm Logout",
+                "Are you sure you want to log out?",
+                [
+                  { text: "Cancel", style: "cancel" },
+                  { text: "OK", onPress: handleLogout },
+                ]
+              )
+            }
             className="bg-red-500 mt-4 p-4 rounded-lg items-center shadow-md"
           >
             <Text className="text-white text-lg font-semibold">Log Out</Text>

@@ -7,59 +7,59 @@ import {
   ScrollView,
   StyleSheet,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { chatbot_query } from "../api/auth";
 
-const create = () => {
+const Create = () => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [foodData, setFoodData] = useState(null);
+  const [confirmationMessage, setConfirmationMessage] = useState("");
 
   const handleSend = async () => {
     if (userInput.trim()) {
-      // 1. 立即显示用户的消息
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { type: "user", text: userInput },
-      ]);
-      setUserInput(""); // 清空输入框
-
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { type: "bot", text: "Analyzing ...", isLoading: true }, // 添加 isLoading 标志
-      ]);
-      setIsLoading(true); // 开始加载
+      setMessages([{ type: "user", text: userInput }]); // 覆盖之前的消息
+      setUserInput("");
+      setIsLoading(true);
+      setConfirmationMessage("");
 
       try {
         const ans = await chatbot_query(userInput.trim());
 
-        // 如果 ans 是空字符串，显示默认提示
-        const botMessage = ans === "" ? "No data found." : ans;
-
-        setMessages((prevMessages) => [
-          ...prevMessages.slice(0, -1), // 移除“Analyzing ...”的消息
-          { type: "bot", text: botMessage }, // 添加机器人回复
-        ]);
+        if (ans && ans.size > 0) {
+          setFoodData(ans);
+        } else {
+          setMessages([{ type: "bot", text: "No data found." }]);
+        }
       } catch (error) {
         console.log(error);
-        setMessages((prevMessages) => [
-          ...prevMessages.slice(0, -1), // 移除“Analyzing ...”的消息
-          { type: "bot", text: error.error || "An error occurred." }, // 添加错误信息
-        ]);
+        setMessages([{ type: "bot", text: "An error occurred." }]);
       }
 
-      setIsLoading(false); // 结束加载
+      setIsLoading(false);
     }
   };
 
+  const handleConfirm = () => {
+    console.log("record");
+    setFoodData(null);
+    setConfirmationMessage(
+      "Data has been recorded, if you want to log more please enter in the text area."
+    );
+  };
+
   return (
-    <View style={styles.container}>
-      {/* Header */}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
       <View style={styles.topText}>
-        <Text style={styles.headerText}>Chat Add</Text>
+        <Text style={styles.headerText}>Food Logger</Text>
       </View>
 
-      {/* Chat area */}
       <ScrollView
         style={styles.chatArea}
         contentContainerStyle={{ padding: 10 }}
@@ -72,19 +72,45 @@ const create = () => {
               message.type === "user" ? styles.userMessage : styles.botMessage,
             ]}
           >
-            {message.isLoading ? ( // 如果是“Analyzing ...”，显示加载动画
-              <View style={styles.loadingContainer}>
-                <Text style={styles.messageText}>{message.text}</Text>
-                <ActivityIndicator size="small" color="#0000ff" />
-              </View>
-            ) : (
-              <Text style={styles.messageText}>{message.text}</Text>
-            )}
+            <Text style={styles.messageText}>{message.text}</Text>
           </View>
         ))}
+
+        {isLoading && (
+          <ActivityIndicator
+            size="large"
+            color="#FF6B6B"
+            style={styles.loadingIndicator}
+          />
+        )}
+
+        {foodData && (
+          <View style={styles.foodContainer}>
+            <Text style={styles.foodContainer_text}>
+              Does the following list correct ?
+            </Text>
+            {Array.from(foodData.entries()).map(([food, intake], index) => (
+              <View key={index} style={styles.foodItem}>
+                <Text style={styles.foodName}>{food}</Text>
+                <Text style={styles.foodIntake}>{intake}</Text>
+              </View>
+            ))}
+            <TouchableOpacity
+              style={styles.confirmButton}
+              onPress={handleConfirm}
+            >
+              <Text style={styles.confirmButtonText}>Confirm</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {confirmationMessage ? (
+          <View style={styles.confirmationContainer}>
+            <Text style={styles.confirmationText}>{confirmationMessage}</Text>
+          </View>
+        ) : null}
       </ScrollView>
 
-      {/* Input area */}
       <View style={styles.inputArea}>
         <TextInput
           style={styles.textInput}
@@ -96,7 +122,7 @@ const create = () => {
           <Text style={styles.sendButtonText}>→</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -122,6 +148,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f3f3f4",
   },
+  loadingIndicator: {
+    marginVertical: 10,
+    alignSelf: "center",
+  },
   messageContainer: {
     marginBottom: 10,
     padding: 10,
@@ -138,9 +168,52 @@ const styles = StyleSheet.create({
   messageText: {
     fontSize: 16,
   },
-  loadingContainer: {
+  foodContainer: {
+    padding: 10,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  foodContainer_text: {
+    fontWeight: "800",
+    fontSize: 15,
+  },
+  confirmationContainer: {
+    padding: 10,
+    marginTop: 10,
+    backgroundColor: "#D1E7FF",
+    borderRadius: 10,
+  },
+  confirmationText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#4A90E2",
+  },
+  foodItem: {
     flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 5,
+  },
+  foodName: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#4A90E2",
+  },
+  foodIntake: {
+    fontSize: 16,
+    color: "#FF6B6B",
+  },
+  confirmButton: {
+    marginTop: 10,
+    backgroundColor: "#4CAF50",
+    padding: 10,
+    borderRadius: 5,
     alignItems: "center",
+  },
+  confirmButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   inputArea: {
     flexDirection: "row",
@@ -174,4 +247,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default create;
+export default Create;

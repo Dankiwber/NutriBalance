@@ -68,28 +68,56 @@ export const password_change = async (email, newPassword) => {
     throw error.response.data;
   }
 };
-
+export const chatbot_query_test = async (input_query) => {
+  console.log("es");
+  const response = [
+    {
+      name: "apple",
+      intake: "5 units",
+      calories: "325 cal",
+      fat: "1 g",
+      carbs: "86 g",
+      protein: "1.5 g",
+    },
+    {
+      name: "bread",
+      intake: "150 g",
+      calories: "390 cal",
+      fat: "4.5 g",
+      carbs: "72 g",
+      protein: "12 g",
+    },
+    {
+      name: "cola",
+      intake: "1 can (330 ml)",
+      calories: "139 cal",
+      fat: "0 g",
+      carbs: "35 g",
+      protein: "0 g",
+    },
+  ];
+  let food_arr = new Map();
+  const intake_arr = [];
+  response.forEach((food) => {
+    food_arr.set(food.name, food.intake);
+  });
+  return food_arr;
+};
 export const chatbot_query = async (input_query) => {
   try {
     const response = await axios.post(`${BASE_URL}/query_process`, {
       query: input_query,
     });
-    console.log("API Response:", response.data); // 调试返回值
-    const obj = response.data;
-    const obj_arr = Object.keys(obj);
 
-    if (obj_arr.length === 0) {
+    if (response.data.length === 0) {
       return "No data found."; // 如果对象为空，返回提示信息
     }
-
-    var ans = "Is the following list correct?\n";
-    obj_arr.forEach((Element, index) => {
-      const item = `${index + 1}. ${Element}`;
-      const intake = `${obj[Element].total_intake}`;
-      ans = ans + `${item.padEnd(20)}${intake.padEnd(20)}\n`;
+    let food_arr = new Map();
+    response.data.forEach((food) => {
+      food_arr.set(food.name, food.intake);
     });
-    console.log(ans);
-    return ans;
+    console.log(food_arr);
+    return food_arr;
   } catch (error) {
     throw error.response?.data || "An error occurred."; // 确保抛出明确的错误信息
   }
@@ -146,4 +174,5 @@ export default {
   logoutUser,
   getdata,
   getuserInfo,
+  chatbot_query_test,
 };

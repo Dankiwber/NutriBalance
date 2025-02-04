@@ -78,7 +78,6 @@ const LoginScreen = () => {
             values,
             errors,
             touched,
-            validatePassword,
           }) => (
             <View style={styles.container}>
               <View style={styles.input_container}>
