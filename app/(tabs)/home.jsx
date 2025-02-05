@@ -15,34 +15,41 @@ import { router } from "expo-router/build";
 import Main_barchart from "../component/barchart";
 import ProgressBar from "../component/nutri_dist";
 import Dount_chart from "../component/donut_chart";
+import { EventEmitter } from "eventemitter3";
+export const eventEmitter = new EventEmitter();
 const App = () => {
   const [nutri_goal, setNurti_goal] = useState([0, 0, 0]);
   const [cal_count, setCal_count] = useState(0);
   const [goal_cal, setGoal_cal] = useState(0);
   const goal_dist = [85, 225, 275];
+  const fetchUserData = async () => {
+    try {
+      const info = await SecureStore.getItemAsync("userInfo");
+      const userInfo = JSON.parse(info);
+      const userGoal = userInfo["daily_goal"];
+      setGoal_cal(userGoal);
+      const data = await SecureStore.getItemAsync("userData");
+      const userData = JSON.parse(data);
+      const daily_arr = [
+        Math.round((userData["daily_intake"][0] / goal_dist[0]) * 100),
+        Math.round((userData["daily_intake"][1] / goal_dist[1]) * 100),
+        Math.round((userData["daily_intake"][2] / goal_dist[2]) * 100),
+      ];
+      setNurti_goal(daily_arr);
+      setCal_count(userData["daily_intake"][3]);
+    } catch (error) {
+      console.error("Failed to fetch user data", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const info = await SecureStore.getItemAsync("userInfo");
-        const userInfo = JSON.parse(info);
-        const userGoal = userInfo["daily_goal"];
-        setGoal_cal(userGoal);
-        const data = await SecureStore.getItemAsync("userData");
-        const userData = JSON.parse(data);
-        const daily_arr = [
-          Math.round((userData["daily_intake"][0] / goal_dist[0]) * 100),
-          Math.round((userData["daily_intake"][1] / goal_dist[1]) * 100),
-          Math.round((userData["daily_intake"][2] / goal_dist[2]) * 100),
-        ];
-        setNurti_goal(daily_arr);
-        setCal_count(userData["daily_intake"][3]);
-      } catch (error) {
-        console.error("Failed to fetch user data", error);
-      }
-    };
-
     fetchUserData();
+    eventEmitter.on("storageChange", fetchUserData);
+
+    // 组件卸载时移除监听
+    return () => {
+      eventEmitter.off("storageChange", fetchUserData);
+    };
   }, []);
 
   return (

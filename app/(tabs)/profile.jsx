@@ -44,7 +44,7 @@ const ProfileScreen = () => {
       setUserGender(undefined);
 
       // 替换到登录界面，防止手势返回
-      router.replace("/signin");
+      router.push("/signin");
     } catch (error) {
       console.error("Logout failed:", error);
       Alert.alert("Logout Error", "Something went wrong while logging out.");
@@ -78,7 +78,6 @@ const ProfileScreen = () => {
   // 如果用户 Token 为空，防止 Profile 被访问，自动跳转到登录页面
   useEffect(() => {
     if (!userToken) {
-      router.replace("/signin");
     }
   }, [userToken]);
 

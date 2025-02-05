@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import * as SecureStore from "expo-secure-store";
 import {
   View,
   Text,
@@ -10,7 +11,8 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { chatbot_query } from "../api/auth";
+import { chatbot_query_test } from "../api/auth";
+import { eventEmitter } from "./home";
 
 const Create = () => {
   const [userInput, setUserInput] = useState("");
@@ -27,7 +29,7 @@ const Create = () => {
       setConfirmationMessage("");
 
       try {
-        const ans = await chatbot_query(userInput.trim());
+        const ans = await chatbot_query_test(userInput.trim());
 
         if (ans && ans.size > 0) {
           setFoodData(ans);
@@ -43,9 +45,21 @@ const Create = () => {
     }
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     console.log("record");
     setFoodData(null);
+    const data = await SecureStore.getItemAsync("userData");
+    const userData = JSON.parse(data);
+    const updateed_data = userData;
+    updateed_data["daily_intake"][3] = String(
+      parseInt(updateed_data["daily_intake"][3]) + 500
+    );
+
+    await SecureStore.setItemAsync("userData", JSON.stringify(updateed_data));
+    const Newdata = await SecureStore.getItemAsync("userData");
+    const NewuserData = JSON.parse(Newdata);
+    console.log(NewuserData["daily_intake"][3]);
+    eventEmitter.emit("storageChange"); // 触发数据更新
     setConfirmationMessage(
       "Data has been recorded, if you want to log more please enter in the text area."
     );

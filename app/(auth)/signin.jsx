@@ -8,6 +8,8 @@ import {
   Text,
   StyleSheet,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -55,104 +57,115 @@ const LoginScreen = () => {
 
   return (
     <SafeAreaView>
-      <View style={styles.header_container}>
-        <Image style={styles.logo_container} source={icons.logo} alt="LOGO" />
-        <Text style={styles.logo_text_base}>
-          <Text style={styles.logo_text_sp}>Nutri</Text>Balance
-        </Text>
-      </View>
-      <View style={styles.login_container}>
-        <View style={styles.welcome_text_container_login}>
-          <Text style={styles.welcome_text1}>Hello</Text>
-          <Text style={styles.welcome_text2_login}>Sign into your account</Text>
-        </View>
-        <Formik
-          initialValues={{ email: "", password: "" }}
-          validationSchema={loginValidationSchema}
-          onSubmit={handleLoginSubmit}
-        >
-          {({
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            values,
-            errors,
-            touched,
-          }) => (
-            <View style={styles.container}>
-              <View style={styles.input_container}>
-                <Text style={styles.input_text}>Email address</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Email"
-                  placeholderTextColor="#6387A9"
-                  onChangeText={handleChange("email")}
-                  onBlur={handleBlur("email")}
-                  value={values.email}
-                />
-                {errors.email && touched.email && (
-                  <Text style={styles.errorText}>{errors.email}</Text>
-                )}
-              </View>
-
-              <View style={styles.input_container}>
-                <Text style={styles.input_text}>Password</Text>
-                <View style={styles.password_container}>
-                  <TextInput
-                    style={styles.password_input}
-                    placeholder="Password"
-                    placeholderTextColor="#6387A9"
-                    secureTextEntry={!showPassword}
-                    onChangeText={handleChange("password")}
-                    onBlur={handleBlur("password")}
-                    value={values.password}
-                  />
-                  <TouchableOpacity
-                    onPress={() => setShowPassword(!showPassword)}
-                    style={styles.show_password_button}
-                  >
-                    <Image
-                      source={!showPassword ? icons.no_eye : icons.eye}
-                      style={styles.show_password_img}
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
-                </View>
-                {errors.password && touched.password && (
-                  <Text style={styles.errorText}>{errors.password}</Text>
-                )}
-              </View>
-
-              <TouchableOpacity style={styles.forget_button}>
-                <Link href="/resetPass" style={styles.forget_button_text}>
-                  Forget your Password?
-                </Link>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.login_button}
-                onPress={handleSubmit}
-              >
-                <Text style={styles.login_button_text}>Login</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </Formik>
-      </View>
-      <View style={styles.creat_acc_container}>
-        <TouchableOpacity onPress={() => router.push("/auth/create")}>
-          <Text style={styles.creat_acc_base}>
-            Don't have an account?{" "}
-            <Link href="/register" style={styles.creat_acc_sp}>
-              Create here
-            </Link>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboard_container}
+      >
+        <View style={styles.header_container}>
+          <Image style={styles.logo_container} source={icons.logo} alt="LOGO" />
+          <Text style={styles.logo_text_base}>
+            <Text style={styles.logo_text_sp}>Nutri</Text>Balance
           </Text>
-        </TouchableOpacity>
-      </View>
+        </View>
+        <View style={styles.login_container}>
+          <View style={styles.welcome_text_container_login}>
+            <Text style={styles.welcome_text1}>Hello</Text>
+            <Text style={styles.welcome_text2_login}>
+              Sign into your account
+            </Text>
+          </View>
+          <Formik
+            initialValues={{ email: "", password: "" }}
+            validationSchema={loginValidationSchema}
+            onSubmit={handleLoginSubmit}
+          >
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+            }) => (
+              <View style={styles.container}>
+                <View style={styles.input_container}>
+                  <Text style={styles.input_text}>Email address</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    placeholderTextColor="#6387A9"
+                    onChangeText={handleChange("email")}
+                    onBlur={handleBlur("email")}
+                    value={values.email}
+                  />
+                  {errors.email && touched.email && (
+                    <Text style={styles.errorText}>{errors.email}</Text>
+                  )}
+                </View>
+
+                <View style={styles.input_container}>
+                  <Text style={styles.input_text}>Password</Text>
+                  <View style={styles.password_container}>
+                    <TextInput
+                      style={styles.password_input}
+                      placeholder="Password"
+                      placeholderTextColor="#6387A9"
+                      secureTextEntry={!showPassword}
+                      onChangeText={handleChange("password")}
+                      onBlur={handleBlur("password")}
+                      value={values.password}
+                    />
+                    <TouchableOpacity
+                      onPress={() => setShowPassword(!showPassword)}
+                      style={styles.show_password_button}
+                    >
+                      <Image
+                        source={!showPassword ? icons.no_eye : icons.eye}
+                        style={styles.show_password_img}
+                        resizeMode="contain"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  {errors.password && touched.password && (
+                    <Text style={styles.errorText}>{errors.password}</Text>
+                  )}
+                </View>
+
+                <TouchableOpacity style={styles.forget_button}>
+                  <Link href="/resetPass" style={styles.forget_button_text}>
+                    Forget your Password?
+                  </Link>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.login_button}
+                  onPress={handleSubmit}
+                >
+                  <Text style={styles.login_button_text}>Login</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </Formik>
+        </View>
+        <View style={styles.creat_acc_container}>
+          <TouchableOpacity onPress={() => router.push("/auth/create")}>
+            <Text style={styles.creat_acc_base}>
+              Don't have an account?{" "}
+              <Link href="/register" style={styles.creat_acc_sp}>
+                Create here
+              </Link>
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  keyboard_container: {
+    flex: 1,
+    backgroundColor: "#EAEFF5",
+  },
   header_container: {
     alignItems: "center",
     height: 160,
