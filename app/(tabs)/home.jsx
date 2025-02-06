@@ -21,6 +21,7 @@ const App = () => {
   const [nutri_goal, setNurti_goal] = useState([0, 0, 0]);
   const [cal_count, setCal_count] = useState(0);
   const [goal_cal, setGoal_cal] = useState(0);
+  const [userData, setUserData] = useState({});
   const goal_dist = [85, 225, 275];
   const fetchUserData = async () => {
     try {
@@ -29,18 +30,23 @@ const App = () => {
       const userGoal = userInfo["daily_goal"];
       setGoal_cal(userGoal);
       const data = await SecureStore.getItemAsync("userData");
-      const userData = JSON.parse(data);
+      const NewuserData = JSON.parse(data);
+      setUserData(NewuserData);
+
       const daily_arr = [
-        Math.round((userData["daily_intake"][0] / goal_dist[0]) * 100),
-        Math.round((userData["daily_intake"][1] / goal_dist[1]) * 100),
-        Math.round((userData["daily_intake"][2] / goal_dist[2]) * 100),
+        Math.round((NewuserData["daily_intake"][0] / goal_dist[0]) * 100),
+        Math.round((NewuserData["daily_intake"][1] / goal_dist[1]) * 100),
+        Math.round((NewuserData["daily_intake"][2] / goal_dist[2]) * 100),
       ];
       setNurti_goal(daily_arr);
-      setCal_count(userData["daily_intake"][3]);
+      setCal_count(NewuserData["daily_intake"][3]);
     } catch (error) {
       console.error("Failed to fetch user data", error);
     }
   };
+  useEffect(() => {
+    console.log("userData 更新了！", userData);
+  }, [userData]);
 
   useEffect(() => {
     fetchUserData();
@@ -88,14 +94,19 @@ const App = () => {
               <Text style={styles.calories_title}>Need for today:</Text>
               <Text style={styles.calories_2}>
                 <Text style={styles.calories_count_2}>
-                  {goal_cal - cal_count}
-                </Text>
+                  {goal_cal - cal_count > 0 ? goal_cal - cal_count : 1000}
+                </Text>{" "}
                 Cal
               </Text>
             </View>
           </View>
+
           <View style={styles.barchart_container}>
-            <Main_barchart />
+            {userData && userData.daily_intake ? (
+              <Main_barchart userData={userData} />
+            ) : (
+              <Text>Loading...</Text>
+            )}
           </View>
         </View>
         <View style={styles.two_chart_container}>

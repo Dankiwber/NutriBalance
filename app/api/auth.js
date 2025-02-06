@@ -97,10 +97,15 @@ export const chatbot_query_test = async (input_query) => {
     },
   ];
   let food_arr = new Map();
-  const intake_arr = [];
+  const intake_arr = [[], [], [], []];
   response.forEach((food) => {
     food_arr.set(food.name, food.intake);
+    intake_arr[0].push(food.fat.slice(0, -2));
+    intake_arr[1].push(food.carbs.slice(0, -2));
+    intake_arr[2].push(food.protein.slice(0, -2));
+    intake_arr[3].push(food.calories.slice(0, -4));
   });
+  console.log(intake_arr);
   return food_arr;
 };
 export const chatbot_query = async (input_query) => {

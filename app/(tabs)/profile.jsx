@@ -75,7 +75,6 @@ const ProfileScreen = () => {
     fetchUserData();
   }, []);
 
-  // 如果用户 Token 为空，防止 Profile 被访问，自动跳转到登录页面
   useEffect(() => {
     if (!userToken) {
     }
@@ -131,7 +130,7 @@ const ProfileScreen = () => {
             </View>
             <View className="bg-white shadow-lg p-6 rounded-lg w-[48%] items-center">
               <Text className="text-gray-600 text-lg font-semibold">
-                Daily Calorie Goal
+                Daily Goal
               </Text>
               <Text className="text-blue-500 text-2xl font-bold mt-2">
                 {userGoal || 0}

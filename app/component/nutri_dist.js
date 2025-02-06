@@ -10,11 +10,11 @@ const ProgressBar = ({
   const progressAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    progressAnim.setValue(0); // 🔥 重新初始化动画，防止动画卡住
+    progressAnim.setValue(0);
     Animated.timing(progressAnim, {
       toValue: progress,
       duration: duration,
-      useNativeDriver: false, // 🔥 `width` 不能使用 `useNativeDriver`
+      useNativeDriver: false,
     }).start();
   }, [progress]);
 
@@ -31,7 +31,7 @@ const ProgressBar = ({
             {
               width: progressAnim.interpolate({
                 inputRange: [0, 100],
-                outputRange: ["1%", "100%"], // 🔥 确保最小宽度是 `1%` 而不是 `0%`
+                outputRange: ["1%", "100%"],
               }),
               backgroundColor: color,
             },

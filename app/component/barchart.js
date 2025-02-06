@@ -2,34 +2,29 @@ import { View, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import { BarChart } from "react-native-gifted-charts";
 import * as SecureStore from "expo-secure-store";
-export default function MainBarChart() {
+export default function MainBarChart({ userData }) {
   const [usedat_arr, setdat_arr] = useState([]);
   const [useintake_arr, setintake_arr] = useState([]);
+
+  const fetchUserData = async () => {
+    const dat_arr = [];
+    const intake_arr = [];
+    for (const key in userData["weekly_intake"]) {
+      intake_arr.push(String(userData["weekly_intake"][key]));
+      const [year, month, day] = key.split("-");
+      const date = new Date(year, month - 1, day);
+      const formattedDate = date.toLocaleString("en-US", {
+        month: "short",
+        day: "2-digit",
+      });
+      dat_arr.push(formattedDate);
+    }
+    console.log(dat_arr);
+    console.log(intake_arr);
+    setdat_arr(dat_arr);
+    setintake_arr(intake_arr);
+  };
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const data = await SecureStore.getItemAsync("userData");
-        const userData = JSON.parse(data);
-        const dat_arr = [];
-        const intake_arr = [];
-        for (const key in userData["weekly_intake"]) {
-          intake_arr.push(String(userData["weekly_intake"][key]));
-          const [year, month, day] = key.split("-");
-          const date = new Date(year, month - 1, day);
-          const formattedDate = date.toLocaleString("en-US", {
-            month: "short",
-            day: "2-digit",
-          });
-          dat_arr.push(formattedDate);
-        }
-        console.log(dat_arr);
-        console.log(intake_arr);
-        setdat_arr(dat_arr);
-        setintake_arr(intake_arr);
-      } catch (error) {
-        console.error("Failed to fetch user data", error);
-      }
-    };
     fetchUserData();
   }, []);
   const data = [

@@ -30,6 +30,4 @@ response.forEach((food) => {
   food_arr.set(food.name, food.intake);
 });
 console.log(food_arr);
-for (let [key, value] of food_arr) {
-  console.log(key + " is " + value);
-}
+console.log({} == true);

@@ -51,14 +51,15 @@ const Create = () => {
     const data = await SecureStore.getItemAsync("userData");
     const userData = JSON.parse(data);
     const updateed_data = userData;
-    updateed_data["daily_intake"][3] = String(
-      parseInt(updateed_data["daily_intake"][3]) + 500
-    );
 
+    console.log(updateed_data["daily_intake"][2]);
+    updateed_data["daily_intake"][2] = String(
+      parseInt(updateed_data["daily_intake"][2]) - 1700
+    );
     await SecureStore.setItemAsync("userData", JSON.stringify(updateed_data));
     const Newdata = await SecureStore.getItemAsync("userData");
     const NewuserData = JSON.parse(Newdata);
-    console.log(NewuserData["daily_intake"][3]);
+    console.log(NewuserData["daily_intake"][2]);
     eventEmitter.emit("storageChange"); // 触发数据更新
     setConfirmationMessage(
       "Data has been recorded, if you want to log more please enter in the text area."
