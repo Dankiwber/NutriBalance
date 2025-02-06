@@ -12,8 +12,7 @@ import {
   Platform,
 } from "react-native";
 import { chatbot_query_test } from "../api/auth";
-import { eventEmitter } from "./home";
-
+import { eventEmitter1 } from "./home";
 const Create = () => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
@@ -44,23 +43,50 @@ const Create = () => {
       setIsLoading(false);
     }
   };
-
-  const handleConfirm = async () => {
-    console.log("record");
+  const handledeny = async () => {
     setFoodData(null);
+
+    await SecureStore.deleteItemAsync("current_intakearr");
+    setConfirmationMessage(
+      "Sorry about that, please enter in the text area again."
+    );
+  };
+  const handleConfirm = async () => {
+    setFoodData(null);
+    const current_date = await SecureStore.getItemAsync("current_date");
+    console.log(current_date);
+    const intake_data = await SecureStore.getItemAsync("current_intakearr");
+    const intake_arr = JSON.parse(intake_data);
+    // fat, carb, pro
     const data = await SecureStore.getItemAsync("userData");
     const userData = JSON.parse(data);
     const updateed_data = userData;
 
-    console.log(updateed_data["daily_intake"][2]);
-    updateed_data["daily_intake"][2] = String(
-      parseInt(updateed_data["daily_intake"][2]) - 1700
+    console.log(updateed_data["weekly_intake"]);
+
+    updateed_data["weekly_intake"][current_date] = String(
+      parseInt(updateed_data["weekly_intake"][current_date]) + intake_arr.total
     );
+
+    updateed_data["daily_intake"][0] = String(
+      parseInt(updateed_data["daily_intake"][0]) + intake_arr.fat
+    );
+    updateed_data["daily_intake"][1] = String(
+      parseInt(updateed_data["daily_intake"][1]) + intake_arr.carb
+    );
+    updateed_data["daily_intake"][2] = String(
+      parseInt(updateed_data["daily_intake"][2]) + intake_arr.prot
+    );
+    updateed_data["daily_intake"][3] = String(
+      parseInt(updateed_data["daily_intake"][3]) + intake_arr.total
+    );
+    console.log(updateed_data["weekly_intake"]);
     await SecureStore.setItemAsync("userData", JSON.stringify(updateed_data));
     const Newdata = await SecureStore.getItemAsync("userData");
     const NewuserData = JSON.parse(Newdata);
-    console.log(NewuserData["daily_intake"][2]);
-    eventEmitter.emit("storageChange"); // 触发数据更新
+    console.log(NewuserData["daily_intake"]);
+
+    eventEmitter1.emit("storageChange"); // 触发数据更新
     setConfirmationMessage(
       "Data has been recorded, if you want to log more please enter in the text area."
     );
@@ -115,6 +141,9 @@ const Create = () => {
               onPress={handleConfirm}
             >
               <Text style={styles.confirmButtonText}>Confirm</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.confirmButton} onPress={handledeny}>
+              <Text style={styles.confirmButtonText}>Incorrect</Text>
             </TouchableOpacity>
           </View>
         )}

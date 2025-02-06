@@ -1,6 +1,7 @@
 import axios from "axios";
 const BASE_URL = "http://192.168.1.66:3000/api";
 const BASE_URL_data = "http://192.168.1.66:3000/data";
+import * as SecureStore from "expo-secure-store";
 
 export const registerUser = async (username, email, password) => {
   const response = await fetch(`${BASE_URL}/register`, {
@@ -69,7 +70,6 @@ export const password_change = async (email, newPassword) => {
   }
 };
 export const chatbot_query_test = async (input_query) => {
-  console.log("es");
   const response = [
     {
       name: "apple",
@@ -97,15 +97,20 @@ export const chatbot_query_test = async (input_query) => {
     },
   ];
   let food_arr = new Map();
-  const intake_arr = [[], [], [], []];
+  const intake_arr = { fat: 0, carb: 0, prot: 0, total: 0 };
   response.forEach((food) => {
     food_arr.set(food.name, food.intake);
-    intake_arr[0].push(food.fat.slice(0, -2));
-    intake_arr[1].push(food.carbs.slice(0, -2));
-    intake_arr[2].push(food.protein.slice(0, -2));
-    intake_arr[3].push(food.calories.slice(0, -4));
+    intake_arr.fat += parseInt(Math.round(food.fat.slice(0, -2)));
+    intake_arr.carb += parseInt(Math.round(food.carbs.slice(0, -2)));
+    intake_arr.prot += parseInt(Math.round(food.protein.slice(0, -2)));
+    intake_arr.total += parseInt(Math.round(food.calories.slice(0, -4)));
   });
   console.log(intake_arr);
+  await SecureStore.setItemAsync(
+    "current_intakearr",
+    JSON.stringify(intake_arr)
+  );
+
   return food_arr;
 };
 export const chatbot_query = async (input_query) => {

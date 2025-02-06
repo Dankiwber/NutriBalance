@@ -32,6 +32,7 @@ const ProfileScreen = () => {
 
       // 清除 SecureStore 存储
       await SecureStore.deleteItemAsync("userToken");
+      await SecureStore.deleteItemAsync("current_date");
       await SecureStore.deleteItemAsync("userName");
       await SecureStore.deleteItemAsync("userDate");
       await SecureStore.deleteItemAsync("userInfo");

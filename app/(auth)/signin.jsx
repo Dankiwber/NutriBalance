@@ -36,15 +36,22 @@ const LoginScreen = () => {
       const result = await loginUser(values.email, values.password);
 
       try {
+        const date = new Date();
+        let day = String(date.getDate()).padStart(2, "0"); // 确保日期是两位数
+        let month = String(date.getMonth() + 1).padStart(2, "0"); // 确保月份是两位数
+        let year = date.getFullYear();
+        let currentDate = `${year}-${month}-${day}`;
         const user_data = await getdata(result.token);
         const user_info = await getuserInfo(result.token);
         await SecureStore.setItemAsync(
           "userInfo",
           JSON.stringify(user_info["userinfo"])
         );
+        console.log(currentDate);
         await SecureStore.setItemAsync("userData", JSON.stringify(user_data));
         await SecureStore.setItemAsync("userToken", result.token);
         await SecureStore.setItemAsync("userName", result.name);
+        await SecureStore.setItemAsync("current_date", currentDate);
 
         router.push("/home");
       } catch (error) {

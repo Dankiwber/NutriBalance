@@ -16,7 +16,7 @@ import Main_barchart from "../component/barchart";
 import ProgressBar from "../component/nutri_dist";
 import Dount_chart from "../component/donut_chart";
 import { EventEmitter } from "eventemitter3";
-export const eventEmitter = new EventEmitter();
+export const eventEmitter1 = new EventEmitter();
 const App = () => {
   const [nutri_goal, setNurti_goal] = useState([0, 0, 0]);
   const [cal_count, setCal_count] = useState(0);
@@ -32,7 +32,7 @@ const App = () => {
       const data = await SecureStore.getItemAsync("userData");
       const NewuserData = JSON.parse(data);
       setUserData(NewuserData);
-
+      console.log(NewuserData["weekly_intake"]);
       const daily_arr = [
         Math.round((NewuserData["daily_intake"][0] / goal_dist[0]) * 100),
         Math.round((NewuserData["daily_intake"][1] / goal_dist[1]) * 100),
@@ -45,16 +45,16 @@ const App = () => {
     }
   };
   useEffect(() => {
-    console.log("userData 更新了！", userData);
+    console.log("userData 更新了！");
   }, [userData]);
 
   useEffect(() => {
     fetchUserData();
-    eventEmitter.on("storageChange", fetchUserData);
+    eventEmitter1.on("storageChange", fetchUserData);
 
     // 组件卸载时移除监听
     return () => {
-      eventEmitter.off("storageChange", fetchUserData);
+      eventEmitter1.off("storageChange", fetchUserData);
     };
   }, []);
 
@@ -94,7 +94,7 @@ const App = () => {
               <Text style={styles.calories_title}>Need for today:</Text>
               <Text style={styles.calories_2}>
                 <Text style={styles.calories_count_2}>
-                  {goal_cal - cal_count > 0 ? goal_cal - cal_count : 1000}
+                  {goal_cal - cal_count > 0 ? goal_cal - cal_count : 0}
                 </Text>{" "}
                 Cal
               </Text>
@@ -132,7 +132,11 @@ const App = () => {
             />
           </View>
           <View style={styles.chart_container}>
-            <Dount_chart />
+            {userData && userData.daily_intake ? (
+              <Dount_chart userData={userData} />
+            ) : (
+              <Text>Loading...</Text>
+            )}
             <View style={styles.bulletContainer}>
               {/* Fat */}
               <View style={styles.bulletItem}>

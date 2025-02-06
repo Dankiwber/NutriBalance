@@ -1,33 +1,18 @@
-const response = [
-  {
-    name: "apple",
-    intake: "5 units",
-    calories: "325 cal",
-    fat: "1 g",
-    carbs: "86 g",
-    protein: "1.5 g",
-  },
-  {
-    name: "bread",
-    intake: "150 g",
-    calories: "390 cal",
-    fat: "4.5 g",
-    carbs: "72 g",
-    protein: "12 g",
-  },
-  {
-    name: "cola",
-    intake: "1 can (330 ml)",
-    calories: "139 cal",
-    fat: "0 g",
-    carbs: "35 g",
-    protein: "0 g",
-  },
-];
-let food_arr = new Map();
-const intake_arr = [];
-response.forEach((food) => {
-  food_arr.set(food.name, food.intake);
-});
-console.log(food_arr);
-console.log({} == true);
+const date = new Date();
+let day = String(date.getDate()).padStart(2, "0"); // 确保日期是两位数
+let month = String(date.getMonth() + 1).padStart(2, "0"); // 确保月份是两位数
+let year = date.getFullYear();
+let currentDate = `${year}-${month}-${day}`;
+console.log(currentDate); // 例如 "2022-06-17"
+
+const obj = {
+  "2025-02-02": "2300",
+  "2025-02-03": "1900",
+  "2025-02-04": "2500",
+  "2025-02-05": "1800",
+  "2025-02-06": "2600",
+  "2025-02-07": "2000",
+  "2025-02-08": "2500",
+};
+
+console.log(obj[currentDate]);

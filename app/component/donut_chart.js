@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
 import React, { useEffect, useState } from "react";
-import * as SecureStore from "expo-secure-store";
-
+import { EventEmitter } from "eventemitter3";
+export const eventEmitter2 = new EventEmitter();
 const ratio_cal = (fat, carb, pro) => {
   const total = fat + carb + pro;
 
@@ -32,33 +32,29 @@ const ratio_cal = (fat, carb, pro) => {
   return ratioString;
 };
 
-export default function DountChart() {
+export default function DountChart({ userData }) {
   const [fat_count, setFat_count] = useState(0);
   const [carb_count, setCarb_count] = useState(0);
   const [prot_count, setProt_count] = useState(0);
   const [ratio, setRatio] = useState("0:0:0");
 
+  const fetchUserData = async () => {
+    try {
+      const fat = parseInt(userData["daily_intake"][0]);
+      const carb = parseInt(userData["daily_intake"][1]);
+      const prot = parseInt(userData["daily_intake"][2]);
+
+      setFat_count(fat);
+      setCarb_count(carb);
+      setProt_count(prot);
+      setRatio(ratio_cal(fat, carb, prot));
+    } catch (error) {
+      console.error("Failed to fetch user data", error);
+    }
+  };
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const data = await SecureStore.getItemAsync("userData");
-        const userData = JSON.parse(data);
-
-        const fat = parseInt(userData["daily_intake"][0]);
-        const carb = parseInt(userData["daily_intake"][1]);
-        const prot = parseInt(userData["daily_intake"][2]);
-
-        setFat_count(fat);
-        setCarb_count(carb);
-        setProt_count(prot);
-        setRatio(ratio_cal(fat, carb, prot));
-      } catch (error) {
-        console.error("Failed to fetch user data", error);
-      }
-    };
-
     fetchUserData();
-  }, []);
+  }, [userData]);
 
   const pieData = [
     { value: fat_count || 0, color: "#C2537C" },

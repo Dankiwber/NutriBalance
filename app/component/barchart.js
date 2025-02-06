@@ -1,7 +1,6 @@
 import { View, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import { BarChart } from "react-native-gifted-charts";
-import * as SecureStore from "expo-secure-store";
 export default function MainBarChart({ userData }) {
   const [usedat_arr, setdat_arr] = useState([]);
   const [useintake_arr, setintake_arr] = useState([]);
@@ -19,14 +18,13 @@ export default function MainBarChart({ userData }) {
       });
       dat_arr.push(formattedDate);
     }
-    console.log(dat_arr);
-    console.log(intake_arr);
     setdat_arr(dat_arr);
     setintake_arr(intake_arr);
   };
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [userData]);
+
   const data = [
     { value: useintake_arr[0], label: "Mon", date: usedat_arr[0] },
     { value: useintake_arr[1], label: "Tue", date: usedat_arr[1] },
