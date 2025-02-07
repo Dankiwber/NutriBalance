@@ -113,6 +113,7 @@ export const chatbot_query_test = async (input_query) => {
 
   return food_arr;
 };
+
 export const chatbot_query = async (input_query) => {
   try {
     const response = await axios.post(`${BASE_URL}/query_process`, {
@@ -175,6 +176,30 @@ export const getuserInfo = async (token) => {
   return data;
 };
 
+export const update_db_info = async (
+  token,
+  record_update,
+  current_intake,
+  date,
+  daily_goal
+) => {
+  console.log(record_update);
+  const response = await fetch(`${BASE_URL_data}/db_data_update`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ record_update, current_intake, date, daily_goal }),
+  });
+  const message = await response.json();
+  if (!response.ok) {
+    throw new Error(message.error || "Register fail");
+  }
+  console.log(message);
+  return message;
+};
+
 export default {
   registerUser,
   loginUser,
@@ -185,4 +210,5 @@ export default {
   getdata,
   getuserInfo,
   chatbot_query_test,
+  update_db_info,
 };

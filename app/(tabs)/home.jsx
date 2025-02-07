@@ -16,6 +16,7 @@ import Main_barchart from "../component/barchart";
 import ProgressBar from "../component/nutri_dist";
 import Dount_chart from "../component/donut_chart";
 import { EventEmitter } from "eventemitter3";
+
 export const eventEmitter1 = new EventEmitter();
 const App = () => {
   const [nutri_goal, setNurti_goal] = useState([0, 0, 0]);
@@ -25,14 +26,11 @@ const App = () => {
   const goal_dist = [85, 225, 275];
   const fetchUserData = async () => {
     try {
-      const info = await SecureStore.getItemAsync("userInfo");
-      const userInfo = JSON.parse(info);
-      const userGoal = userInfo["daily_goal"];
+      const userGoal = await SecureStore.getItemAsync("user_dailyGoal");
       setGoal_cal(userGoal);
       const data = await SecureStore.getItemAsync("userData");
       const NewuserData = JSON.parse(data);
       setUserData(NewuserData);
-      console.log(NewuserData["weekly_intake"]);
       const daily_arr = [
         Math.round((NewuserData["daily_intake"][0] / goal_dist[0]) * 100),
         Math.round((NewuserData["daily_intake"][1] / goal_dist[1]) * 100),

@@ -4,10 +4,12 @@ import { BarChart } from "react-native-gifted-charts";
 export default function MainBarChart({ userData }) {
   const [usedat_arr, setdat_arr] = useState([]);
   const [useintake_arr, setintake_arr] = useState([]);
+  const [maxvalue, setMaxValue] = useState(0);
 
   const fetchUserData = async () => {
     const dat_arr = [];
     const intake_arr = [];
+
     for (const key in userData["weekly_intake"]) {
       intake_arr.push(String(userData["weekly_intake"][key]));
       const [year, month, day] = key.split("-");
@@ -18,13 +20,20 @@ export default function MainBarChart({ userData }) {
       });
       dat_arr.push(formattedDate);
     }
+
+    setMaxValue(Math.max(...intake_arr.map(Number)) * 1.2);
+    console.log(maxvalue);
     setdat_arr(dat_arr);
     setintake_arr(intake_arr);
   };
+
   useEffect(() => {
     fetchUserData();
   }, [userData]);
 
+  useEffect(() => {
+    console.log("maxvalue 更新了！", maxvalue);
+  }, [maxvalue]);
   const data = [
     { value: useintake_arr[0], label: "Mon", date: usedat_arr[0] },
     { value: useintake_arr[1], label: "Tue", date: usedat_arr[1] },
@@ -49,7 +58,7 @@ export default function MainBarChart({ userData }) {
   return (
     <View style={{ alignItems: "center", marginTop: 20 }}>
       <BarChart
-        maxValue={Math.max(...data.map((item) => item.value)) + 650}
+        maxValue={maxvalue}
         data={updatedData}
         barWidth={22}
         spacingAuto
