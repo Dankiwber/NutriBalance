@@ -69,6 +69,7 @@ export const password_change = async (email, newPassword) => {
     throw error.response.data;
   }
 };
+
 export const chatbot_query_test = async (input_query) => {
   const response = [
     {
@@ -115,19 +116,37 @@ export const chatbot_query_test = async (input_query) => {
 };
 
 export const chatbot_query = async (input_query) => {
+  const token = await SecureStore.getItemAsync("userToken");
   try {
-    const response = await axios.post(`${BASE_URL}/query_process`, {
-      query: input_query,
-    });
+    const response = await axios.post(
+      `${BASE_URL_data}/query_process`,
+      { query: input_query },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // 这里添加 JWT Token
+          "Content-Type": "application/json", // 确保 JSON 格式
+        },
+      }
+    );
 
     if (response.data.length === 0) {
       return "No data found."; // 如果对象为空，返回提示信息
     }
+    console.log(response.data);
     let food_arr = new Map();
+    const intake_arr = { fat: 0, carb: 0, prot: 0, total: 0 };
     response.data.forEach((food) => {
       food_arr.set(food.name, food.intake);
+      intake_arr.fat += parseInt(Math.round(food.fat.slice(0, -2)));
+      intake_arr.carb += parseInt(Math.round(food.carbs.slice(0, -2)));
+      intake_arr.prot += parseInt(Math.round(food.protein.slice(0, -2)));
+      intake_arr.total += parseInt(Math.round(food.calories.slice(0, -4)));
     });
     console.log(food_arr);
+    await SecureStore.setItemAsync(
+      "current_intakearr",
+      JSON.stringify(intake_arr)
+    );
     return food_arr;
   } catch (error) {
     throw error.response?.data || "An error occurred."; // 确保抛出明确的错误信息
@@ -183,7 +202,6 @@ export const update_db_info = async (
   date,
   daily_goal
 ) => {
-  console.log(record_update);
   const response = await fetch(`${BASE_URL_data}/db_data_update`, {
     method: "POST",
     headers: {

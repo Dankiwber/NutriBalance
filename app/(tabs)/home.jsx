@@ -42,9 +42,6 @@ const App = () => {
       console.error("Failed to fetch user data", error);
     }
   };
-  useEffect(() => {
-    console.log("userData 更新了！");
-  }, [userData]);
 
   useEffect(() => {
     fetchUserData();

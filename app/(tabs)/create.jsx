@@ -11,7 +11,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { chatbot_query_test } from "../api/auth";
+import { chatbot_query } from "../api/auth";
 import { eventEmitter1 } from "./home";
 import { update_db_info } from "../api/auth";
 
@@ -30,7 +30,7 @@ const Create = () => {
       setConfirmationMessage("");
 
       try {
-        const ans = await chatbot_query_test(userInput.trim());
+        const ans = await chatbot_query(userInput.trim());
 
         if (ans && ans.size > 0) {
           setFoodData(ans);
@@ -79,8 +79,6 @@ const Create = () => {
 
     const user_daily_goal = await SecureStore.getItemAsync("user_dailyGoal");
 
-    console.log(updateed_data["weekly_intake"]);
-
     updateed_data["weekly_intake"][current_date] = String(
       parseInt(updateed_data["weekly_intake"][current_date]) + intake_arr.total
     );
@@ -98,12 +96,7 @@ const Create = () => {
       parseInt(updateed_data["daily_intake"][3]) + intake_arr.total
     );
     await SecureStore.setItemAsync("userData", JSON.stringify(updateed_data));
-    const Newdata = await SecureStore.getItemAsync("userData");
-    const NewuserData = JSON.parse(Newdata);
-    console.log(updateed_data["daily_intake"]);
-    console.log(updateed_data["weekly_intake"][current_date]);
-    console.log(time);
-    console.log(user_daily_goal);
+
     try {
       const mess = await update_db_info(
         user_token,

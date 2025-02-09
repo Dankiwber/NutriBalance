@@ -31,9 +31,6 @@ export default function MainBarChart({ userData }) {
     fetchUserData();
   }, [userData]);
 
-  useEffect(() => {
-    console.log("maxvalue 更新了！", maxvalue);
-  }, [maxvalue]);
   const data = [
     { value: useintake_arr[0], label: "Mon", date: usedat_arr[0] },
     { value: useintake_arr[1], label: "Tue", date: usedat_arr[1] },
